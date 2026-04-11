@@ -17,7 +17,7 @@
             background: linear-gradient(135deg, #f0f7ff, #e6f0fa); 
             margin: 0; 
             padding: 20px; 
-            color: #333; 
+            color: #333;
         }
         .container { 
             max-width: 960px; 
@@ -25,7 +25,7 @@
             background: white; 
             border-radius: 16px; 
             box-shadow: 0 10px 40px rgba(0,0,0,0.12); 
-            overflow: hidden; 
+            overflow: hidden;
         }
         header { 
             background: linear-gradient(90deg, #1e88e5, #1565c0); 
@@ -35,6 +35,13 @@
         }
         h1 { margin: 0; font-size: 32px; }
         .subtitle { opacity: 0.95; font-size: 17px; margin-top: 10px; }
+
+        #welcome-page, #test-page, #result-page {
+            display: none;
+        }
+        #welcome-page.active, #test-page.active, #result-page.active {
+            display: block;
+        }
 
         /* 欢迎页面 */
         #welcome-page {
@@ -61,11 +68,10 @@
             font-size: 19px;
             border-radius: 12px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: background 0.2s;
         }
         .start-btn:hover {
             background: #0d47a1;
-            transform: translateY(-2px);
         }
 
         .section { padding: 30px; }
@@ -80,7 +86,7 @@
             height: 100%; 
             background: linear-gradient(90deg, #1e88e5, #1565c0); 
             width: 0%; 
-            transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); 
+            transition: width 0.3s; 
         }
         .progress-text {
             text-align: center;
@@ -120,21 +126,18 @@
             border: 2px solid #e0e0e0; 
             border-radius: 10px; 
             cursor: pointer; 
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s;
             font-size: 16px;
         }
         .option:hover { 
             border-color: #1e88e5; 
             background: #f0f7ff;
-            transform: translateX(4px);
         }
         .option.selected { 
             background: #e3f2fd; 
             border-color: #1565c0; 
             color: #1565c0; 
-            font-weight: 600; 
-            transform: scale(1.02);
-            box-shadow: 0 4px 12px rgba(21, 101, 192, 0.15);
+            font-weight: 600;
         }
 
         button { 
@@ -146,12 +149,17 @@
             border-radius: 10px; 
             cursor: pointer; 
             margin: 10px 8px;
-            transition: all 0.2s;
+            transition: background 0.2s;
         }
-        button:hover { background: #0d47a1; }
-        button:disabled { background: #aaa; cursor: not-allowed; }
+        button:hover { 
+            background: #0d47a1;
+        }
+        button:disabled { 
+            background: #aaa; 
+            cursor: not-allowed;
+        }
 
-        .result { display: none; padding: 40px 30px; }
+        .result { padding: 40px 30px; }
         table { 
             width: 100%; 
             border-collapse: collapse; 
@@ -172,7 +180,7 @@
             padding: 22px; 
             border-radius: 12px; 
             margin: 18px 0; 
-            border-left: 6px solid #4caf50; 
+            border-left: 6px solid #4caf50;
         }
         .dept-name {
             font-size: 19px;
@@ -191,16 +199,25 @@
             margin: 25px 0;
             font-size: 15px;
         }
+        .dept-desc {
+            line-height: 1.6;
+            margin: 8px 0;
+            color: #2e7d32;
+        }
+        .dept-suitable {
+            line-height: 1.6;
+            margin: 8px 0;
+            color: #1b5e20;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-
         <!-- 欢迎页面 -->
-        <div id="welcome-page">
+        <div id="welcome-page" class="active">
             <h1>📌 NMUTI-24</h1>
             <p class="subtitle">医学生六维职业契合度测评系统（PRO版）</p>
-            
             <h2>欢迎使用本测评工具</h2>
             <p>
                 这是一套医学生版的MBTI，周四V我50直通心愿科室。<br>
@@ -211,14 +228,12 @@
         </div>
 
         <!-- 测评页面 -->
-        <div id="test-page" class="section" style="display: none;">
+        <div id="test-page" class="section">
             <div class="progress-text">
                 已完成 <span id="progress-text">0</span>/24 题
             </div>
             <div class="progress"><div id="progress-bar" class="progress-bar"></div></div>
-
             <div id="questions"></div>
-
             <div style="text-align:center; margin-top: 30px;">
                 <button id="prev-btn" onclick="prevQuestion()" style="display:none;">← 上一步</button>
                 <button id="next-btn" onclick="nextQuestion()" style="display:none;">下一步 →</button>
@@ -228,9 +243,7 @@
         <!-- 结果页面 -->
         <div id="result-page" class="result">
             <h2 style="color:#1565c0; text-align:center;">🎯 您的测评结果</h2>
-            
             <div id="score-summary" style="margin:30px 0; font-size:18px; line-height:1.7;"></div>
-
             <h3>📊 您的六维得分（满分20分）</h3>
             <table id="score-table">
                 <thead>
@@ -242,14 +255,11 @@
                 </thead>
                 <tbody></tbody>
             </table>
-
             <h3>🏥 最匹配的三个科室推荐</h3>
             <div id="recommendations"></div>
-
             <div class="warning">
                 ⚠️ 测评仅供参考，实际职业选择还需结合个人兴趣、身体条件、家庭因素及就业市场综合考虑。
             </div>
-
             <div style="text-align:center; margin-top:50px;">
                 <button onclick="restartTest()" style="background:#ff9800; padding:14px 40px;">重新测评</button>
             </div>
@@ -257,65 +267,134 @@
     </div>
 
     <script>
-        // 24道题目（保持不变）
         const questions = [
             { id:1, dim:"DER", q:"遇到突发紧急情况时，我通常是第一个站出来制定计划的人，而不是等待指示。" },
             { id:2, dim:"DER", q:"即使在信息不充分的情况下，我也能快速拍板做决定，并敢于承担后果。" },
             { id:3, dim:"DER", q:"在混乱嘈杂、多线并行的环境中（如车祸现场或急救室），我反而能保持头脑清醒。" },
             { id:4, dim:"DER", q:"我倾向于“先行动控制局面，再复盘分析细节”，而不是“没想清楚绝对不行动”。" },
-
             { id:5, dim:"EHC", q:"当朋友倾诉痛苦时，我很容易感同身受，甚至会因为他们的遭遇而情绪低落。" },
             { id:6, dim:"EHC", q:"我认为安抚患者的情绪、解释病情，与开出正确的处方同等重要。" },
             { id:7, dim:"EHC", q:"我能敏锐地察觉到陌生人非语言的微表情或肢体动作所传达的不安与焦虑。" },
             { id:8, dim:"EHC", q:"即使工作很忙，我也愿意多花几分钟倾听患者与疾病无关的“牢骚”或家庭背景。" },
-
             { id:9, dim:"PDO", q:"我非常享受拼图、模型制作或外科打结等需要长时间极度专注和手眼协调的活动。" },
             { id:10,dim:"PDO", q:"在阅读冗长的文件或报告时，我总能一眼发现别人容易忽略的微小错漏。" },
             { id:11,dim:"PDO", q:"我可以在显微镜下或盯着狭小视野进行连续数小时的操作，而不会感到极度烦躁。" },
             { id:12,dim:"PDO", q:"我有强烈的“强迫症”，喜欢严格按照SOP（标准作业程序）和核对表做事。" },
-
             { id:13,dim:"SHT", q:"即使连续熬夜、睡眠严重不足，我的情绪依然相对平稳，不会轻易暴躁。" },
             { id:14,dim:"SHT", q:"面对不可挽回的挫折（如尽力后依然失败），我能迅速调整心态，不长期内耗。" },
             { id:15,dim:"SHT", q:"我的身体素质很好，能够适应黑白颠倒的夜班和不规律的饮食节奏。" },
             { id:16,dim:"SHT", q:"我能很好地将工作中的负面情绪（如见证生老病死）与个人生活剥离开来。" },
-
             { id:17,dim:"ALR", q:"相比于直接得到答案，我更享受为了一个罕见现象去翻阅大量文献的过程。" },
             { id:18,dim:"ALR", q:"我喜欢玩逻辑推理游戏或看悬疑小说，擅长从纷繁复杂的线索中推导出真相。" },
             { id:19,dim:"ALR", q:"对于疾病的底层分子机制或病理生理学基础，我有着强烈的探究欲。" },
             { id:20,dim:"ALR", q:"我对参与临床试验、撰写论文或进行基础科学研究充满热情。" },
-
             { id:21,dim:"CSI", q:"在团队协作中，我通常担任协调者，擅长化解成员间的冲突并合理分配任务。" },
             { id:22,dim:"CSI", q:"面对脾气暴躁或固执的人，我依然有耐心且有策略地说服他们。" },
             { id:23,dim:"CSI", q:"我非常享受与不同背景、不同专业的人（如其他科室、护士、家属）跨部门协作。" },
             { id:24,dim:"CSI", q:"在面对无理取闹或医患纠纷苗头时，我懂得如何用沟通技巧“降温”和化解危机。" }
         ];
 
-        // 科室库（已统一添加英文缩写）
         const departments = [
-            { name: "急诊科", abbr: "ED",          der:20, ehc:10, pdo:14, sht:20, alr:13, csi:15 },
-            { name: "重症医学", abbr: "ICU",       der:19, ehc:8,  pdo:16, sht:20, alr:16, csi:14 },
-            { name: "普通外科", abbr: "GS",        der:18, ehc:10, pdo:17, sht:18, alr:12, csi:12 },
-            { name: "骨科", abbr: "Ortho",         der:17, ehc:9,  pdo:15, sht:19, alr:11, csi:12 },
-            { name: "妇产科", abbr: "OB/GYN",      der:18, ehc:14, pdo:16, sht:19, alr:11, csi:15 },
-            { name: "麻醉科", abbr: "Anesth",      der:18, ehc:6,  pdo:17, sht:17, alr:15, csi:10 },
-            { name: "心血管内科", abbr: "Cardio",  der:16, ehc:12, pdo:16, sht:17, alr:17, csi:14 },
-            { name: "神经内科", abbr: "Neuro",     der:10, ehc:14, pdo:16, sht:12, alr:19, csi:14 },
-            { name: "肿瘤内科", abbr: "Onco",      der:11, ehc:18, pdo:14, sht:16, alr:18, csi:16 },
-            { name: "儿科", abbr: "Peds",          der:14, ehc:20, pdo:12, sht:16, alr:12, csi:18 },
-            { name: "精神科", abbr: "Psych",       der:8,  ehc:18, pdo:8,  sht:12, alr:16, csi:18 },
-            { name: "全科医学", abbr: "FM",        der:12, ehc:16, pdo:12, sht:10, alr:12, csi:20 },
-            { name: "眼科/显微外科", abbr: "Ophth", der:13, ehc:11, pdo:20, sht:12, alr:14, csi:12 },
-            { name: "皮肤科", abbr: "Derm",        der:10, ehc:12, pdo:18, sht:8,  alr:14, csi:14 },
-            { name: "病理科", abbr: "Path",        der:8,  ehc:6,  pdo:19, sht:10, alr:19, csi:6  },
-            
-            // 新增科室
-            { name: "中医科", abbr: "TCM",         der:9,  ehc:16, pdo:14, sht:11, alr:17, csi:15 },
-            { name: "预防医学", abbr: "PrevMed",   der:7,  ehc:12, pdo:13, sht:9,  alr:18, csi:14 },
-            { name: "医学影像科", abbr: "Radiology", der:6, ehc:5,  pdo:19, sht:8,  alr:16, csi:7  },
-            { name: "康复医学科", abbr: "Rehab",   der:11, ehc:17, pdo:15, sht:13, alr:14, csi:16 },
-            
-            // 隐蔽科室
-            { name: "空降行政岗", abbr: "Admin",   der:0,  ehc:0,  pdo:0,  sht:0,  alr:0,  csi:0  }
+            { 
+                name: "急诊科", abbr: "ED", der:20, ehc:10, pdo:14, sht:20, alr:13, csi:15,
+                desc: "医院的前沿阵地，24小时接诊急危重症患者，负责紧急抢救、快速处置，节奏快、突发状况多。",
+                suitable: "适合决断力强、抗压能力顶尖、能快速应对突发情况、适应高压环境的人。"
+            },
+            { 
+                name: "重症医学", abbr: "ICU", der:19, ehc:8, pdo:16, sht:20, alr:16, csi:14,
+                desc: "集中救治危重患者，依赖精密监护设备，对病情监测与操作精度要求极高，工作强度大。",
+                suitable: "适合心思缜密、抗压能力极强、擅长精细操作、能承受高强度工作的人。"
+            },
+            { 
+                name: "普通外科", abbr: "GS", der:18, ehc:10, pdo:17, sht:18, alr:12, csi:12,
+                desc: "基础外科科室，开展胃肠、肝胆等常见手术，手术量大，实操性强。",
+                suitable: "适合动手能力强、性格果断、抗压能力较好、偏爱外科实操的人。"
+            },
+            { 
+                name: "骨科", abbr: "Ortho", der:17, ehc:9, pdo:15, sht:19, alr:11, csi:12,
+                desc: "处理骨骼、关节、肌肉创伤与疾病，手术体力要求高，操作精准度需求高。",
+                suitable: "适合身体素质好、动手能力强、抗压能力优秀的人。"
+            },
+            { 
+                name: "妇产科", abbr: "OB/GYN", der:18, ehc:14, pdo:16, sht:19, alr:11, csi:15,
+                desc: "负责女性生殖疾病与分娩工作，急诊情况多，需兼顾医疗操作与人文关怀。",
+                suitable: "适合果断干练、共情与沟通能力良好、能应对突发状况的人。"
+            },
+            { 
+                name: "麻醉科", abbr: "Anesth", der:18, ehc:6, pdo:17, sht:17, alr:15, csi:10,
+                desc: "负责手术麻醉、生命体征管控与疼痛管理，要求操作精准、反应迅速。",
+                suitable: "适合沉稳细心、操作精准、专注技术、不喜频繁沟通的人。"
+            },
+            { 
+                name: "心血管内科", abbr: "Cardio", der:16, ehc:12, pdo:16, sht:17, alr:17, csi:14,
+                desc: "诊治心脑血管疾病，含介入手术，学术性强，逻辑与专业要求高。",
+                suitable: "适合热爱学术、逻辑思维强、能开展精细操作的人。"
+            },
+            { 
+                name: "神经内科", abbr: "Neuro", der:10, ehc:14, pdo:16, sht:12, alr:19, csi:14,
+                desc: "研究神经系统疾病，诊断逻辑复杂，疑难病例多，学术氛围浓厚。",
+                suitable: "适合逻辑推理强、热爱钻研、耐心细致、偏爱学术研究的人。"
+            },
+            { 
+                name: "肿瘤内科", abbr: "Onco", der:11, ehc:18, pdo:14, sht:16, alr:18, csi:16,
+                desc: "以化疗、靶向治疗为主，需长期与患者沟通，人文关怀需求极高。",
+                suitable: "适合共情能力强、有耐心、学术扎实、擅长沟通疏导的人。"
+            },
+            { 
+                name: "儿科", abbr: "Peds", der:14, ehc:20, pdo:12, sht:16, alr:12, csi:18,
+                desc: "接诊儿童患者，患儿无法清晰表述病情，对观察力和耐心要求极高。",
+                suitable: "适合爱心充足、共情力拉满、沟通能力顶尖、极具耐心的人。"
+            },
+            { 
+                name: "精神科", abbr: "Psych", der:8, ehc:18, pdo:8, sht:12, alr:16, csi:18,
+                desc: "诊治心理与精神障碍，以问诊沟通、心理疏导为主，操作少。",
+                suitable: "适合善于倾听、共情力强、擅长沟通、内心温和包容的人。"
+            },
+            { 
+                name: "全科医学", abbr: "FM", der:12, ehc:16, pdo:12, sht:10, alr:12, csi:20,
+                desc: "综合诊疗常见病，负责健康管理与转诊，是医疗体系的多面手。",
+                suitable: "适合沟通协调能力极强、性格温和、知识全面的人。"
+            },
+            { 
+                name: "眼科/显微外科", abbr: "Ophth", der:13, ehc:11, pdo:20, sht:12, alr:14, csi:12,
+                desc: "显微镜下眼部操作，精细度要求极高，工作节奏相对平稳。",
+                suitable: "适合细节敏感度拉满、手眼协调极强、能长期专注精细操作的人。"
+            },
+            { 
+                name: "皮肤科", abbr: "Derm", der:10, ehc:12, pdo:18, sht:8, alr:14, csi:14,
+                desc: "以门诊为主，工作节奏平稳，对细节观察要求高，临床压力较小。",
+                suitable: "适合注重细节、喜欢平稳节奏、不愿承受高压的人。"
+            },
+            { 
+                name: "病理科", abbr: "Path", der:8, ehc:6, pdo:19, sht:10, alr:19, csi:6,
+                desc: "通过标本切片诊断疾病，几乎不接触患者，纯技术学术科室。",
+                suitable: "适合喜欢独立钻研、细节控、不爱与患者沟通的人。"
+            },
+            { 
+                name: "中医科", abbr: "TCM", der:9, ehc:16, pdo:14, sht:11, alr:17, csi:15,
+                desc: "以整体调理为主，诊疗温和，注重中医理论与经验结合。",
+                suitable: "适合热爱中医、共情能力好、有耐心、喜爱传统医学的人。"
+            },
+            { 
+                name: "预防医学", abbr: "PrevMed", der:7, ehc:12, pdo:13, sht:9, alr:18, csi:14,
+                desc: "侧重疾病预防与公共卫生管理，临床压力低，以调研宣教为主。",
+                suitable: "适合喜爱学术研究、抗压需求低、擅长公卫相关工作的人。"
+            },
+            { 
+                name: "医学影像科", abbr: "Radiology", der:6, ehc:5, pdo:19, sht:8, alr:16, csi:7,
+                desc: "通过影像阅片诊断，工作规律，操作精细，沟通需求极低。",
+                suitable: "适合细节控、喜欢独立工作、阅片能力强、不善沟通的人。"
+            },
+            { 
+                name: "康复医学科", abbr: "Rehab", der:11, ehc:17, pdo:15, sht:13, alr:14, csi:16,
+                desc: "帮助患者功能恢复，以康复训练为主，工作氛围温和轻松。",
+                suitable: "适合共情能力强、有耐心、沟通良好、偏爱温和环境的人。"
+            },
+            { 
+                name: "空降行政岗", abbr: "Admin", der:0, ehc:0, pdo:0, sht:0, alr:0, csi:0,
+                desc: "脱离临床一线，负责医院管理与行政事务，无医疗压力。",
+                suitable: "你是公子哥吗你就来了？"
+            }
         ];
 
         let answers = new Array(24).fill(0);
@@ -331,15 +410,14 @@
         };
 
         function startTest() {
-            document.getElementById("welcome-page").style.display = "none";
-            document.getElementById("test-page").style.display = "block";
+            document.getElementById("welcome-page").classList.remove("active");
+            document.getElementById("test-page").classList.add("active");
             renderQuestion();
         }
 
         function renderQuestion() {
             const qContainer = document.getElementById("questions");
             qContainer.innerHTML = "";
-
             const q = questions[currentQuestion];
             const html = `
                 <div class="dimension">
@@ -350,7 +428,7 @@
                             ${[1,2,3,4,5].map(score => `
                                 <div class="option ${answers[q.id-1] === score ? 'selected' : ''}" 
                                      onclick="selectAnswer(${q.id}, ${score});">
-                                    ${score} 分 —— ${getOptionDesc(score)}
+                                    ${score} 分 —— ${["完全不符合","较不符合","一般符合","比较符合","完全符合"][score-1]}
                                 </div>
                             `).join('')}
                         </div>
@@ -358,30 +436,18 @@
                 </div>
             `;
             qContainer.innerHTML = html;
-
             document.getElementById("prev-btn").style.display = currentQuestion === 0 ? "none" : "inline-block";
             document.getElementById("next-btn").style.display = currentQuestion === 23 ? "none" : "inline-block";
-
             const progress = ((currentQuestion + 1) / 24) * 100;
             document.getElementById("progress-bar").style.width = `${progress}%`;
             document.getElementById("progress-text").textContent = currentQuestion + 1;
         }
 
-        function getOptionDesc(score) {
-            const desc = ["完全不符合", "较不符合", "一般符合", "比较符合", "完全符合"];
-            return desc[score - 1];
-        }
-
         function selectAnswer(qid, score) {
             answers[qid - 1] = score;
-            
-            // 立即显示选中状态
             const options = document.querySelectorAll(`#options-${qid} .option`);
-            options.forEach(opt => {
-                opt.classList.toggle('selected', parseInt(opt.getAttribute('onclick').match(/\d+/)[0]) === score);
-            });
-
-            // 提升流畅度的自动跳转
+            options.forEach(opt => opt.classList.remove("selected"));
+            event.currentTarget.classList.add("selected");
             setTimeout(() => {
                 if (currentQuestion < 23) {
                     currentQuestion++;
@@ -389,7 +455,7 @@
                 } else {
                     calculateResult();
                 }
-            }, 180);   // 优化为180ms，更丝滑
+            }, 150);
         }
 
         function nextQuestion() {
@@ -408,40 +474,31 @@
 
         function calculateScores() {
             const scores = { DER:0, EHC:0, PDO:0, SHT:0, ALR:0, CSI:0 };
-            questions.forEach((q, index) => {
-                scores[q.dim] += answers[index];
-            });
+            questions.forEach((q, index) => scores[q.dim] += answers[index]);
             return scores;
         }
 
         function euclideanDistance(user, dept) {
             return Math.sqrt(
-                Math.pow(user.DER - dept.der, 2) +
-                Math.pow(user.EHC - dept.ehc, 2) +
-                Math.pow(user.PDO - dept.pdo, 2) +
-                Math.pow(user.SHT - dept.sht, 2) +
-                Math.pow(user.ALR - dept.alr, 2) +
-                Math.pow(user.CSI - dept.csi, 2)
+                Math.pow(user.DER - dept.der, 2) + Math.pow(user.EHC - dept.ehc, 2) +
+                Math.pow(user.PDO - dept.pdo, 2) + Math.pow(user.SHT - dept.sht, 2) +
+                Math.pow(user.ALR - dept.alr, 2) + Math.pow(user.CSI - dept.csi, 2)
             );
         }
 
         function calculateResult() {
             if (answers.includes(0)) {
-                alert("请完成所有题目后再查看结果！");
+                alert("请完成所有题目！");
                 return;
             }
-
             const userScores = calculateScores();
+            const results = departments.map(dept => ({
+                ...dept, distance: euclideanDistance(userScores, dept)
+            })).sort((a, b) => a.distance - b.distance);
 
-            const results = departments.map(dept => {
-                const dist = euclideanDistance(userScores, dept);
-                return { ...dept, distance: dist };
-            }).sort((a, b) => a.distance - b.distance);
+            document.getElementById("test-page").classList.remove("active");
+            document.getElementById("result-page").classList.add("active");
 
-            document.getElementById("test-page").style.display = "none";
-            document.getElementById("result-page").style.display = "block";
-
-            // 得分表格
             let scoreHTML = "";
             Object.keys(userScores).forEach(dim => {
                 scoreHTML += `
@@ -449,38 +506,34 @@
                         <td><strong>${dimNames[dim]}</strong></td>
                         <td style="font-size:24px; font-weight:bold; color:#1565c0;">${userScores[dim]}</td>
                         <td>满分20分</td>
-                    </tr>
-                `;
+                    </tr>`;
             });
-            document.getElementById("score-table").querySelector("tbody").innerHTML = scoreHTML;
+            document.querySelector("#score-table tbody").innerHTML = scoreHTML;
 
-            // 推荐科室（显示中文 + 英文缩写）
             let recHTML = "";
             for (let i = 0; i < 3; i++) {
                 const r = results[i];
                 recHTML += `
                     <div class="recommend">
-                        <h3 class="dept-name">🥇 第 ${i+1} 推荐：${r.name} <strong>(${r.abbr})</strong></h3>
-                        <p class="distance">多维距离：${r.distance.toFixed(2)}（数值越小，匹配度越高）</p>
-                        <p><strong>匹配分析：</strong>懒得写了，等下次想起来再写。</p>
-                    </div>
-                `;
+                        <h3 class="dept-name">🥇 第 ${i+1} 推荐：${r.name} (${r.abbr})</h3>
+                        <p class="distance">匹配距离：${r.distance.toFixed(2)}</p>
+                        <p class="dept-desc"><strong>科室简介：</strong>${r.desc}</p>
+                        <p class="dept-suitable"><strong>适合人群：</strong>${r.suitable}</p>
+                    </div>`;
             }
             document.getElementById("recommendations").innerHTML = recHTML;
 
-            const typeDesc = (userScores.DER > 14 && userScores.SHT > 14) ? "高决断高抗压型" :
-                             (userScores.EHC > 15 && userScores.CSI > 15) ? "高共情高沟通型" : "均衡发展型";
-            document.getElementById("score-summary").innerHTML = `
-                <p>您的性格画像整体偏向<strong>${typeDesc}</strong>。<br>
-                系统已根据六维欧几里得距离为您计算出最适合的执业方向。以下三个科室是当前最优推荐。</p>
-            `;
+            const typeDesc = (userScores.DER >14 && userScores.SHT>14) ? "高决断高抗压型" :
+                             (userScores.EHC>15 && userScores.CSI>15) ? "高共情高沟通型" : "均衡发展型";
+            document.getElementById("score-summary").innerHTML = 
+                `<p>您的性格画像偏向<strong>${typeDesc}</strong>，以下为最优匹配科室。</p>`;
         }
 
         function restartTest() {
             answers = new Array(24).fill(0);
             currentQuestion = 0;
-            document.getElementById("result-page").style.display = "none";
-            document.getElementById("welcome-page").style.display = "block";
+            document.getElementById("result-page").classList.remove("active");
+            document.getElementById("welcome-page").classList.add("active");
         }
     </script>
 </body>
