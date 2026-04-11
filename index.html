@@ -113,11 +113,10 @@
 
     <script>
         const questions = [
-            // 原有问题 + 新增问题（已优化顺序与分支）
             { id: 1, question: "当你在医院上实习课时，你的状态是？", icon: "🤔",
                 options: [
                     { text: "我一直在跟着老师冲！", next: 2 },
-                    { text: "大脑在转，但人已经呆了", next: 3 }
+                    { text: "大脑在转，但人已经呆了", next: 3 },
                     { text: "我躲在后面抠手机", next: 3 }
                 ]
             },
@@ -127,7 +126,6 @@
                     { text: "注意力分散，学医害的", next: 5 }
                 ]
             },
-            // 干扰题1：无论选什么都去6
             { id: 3, question: "你更喜欢咖啡还是茶？", icon: "☕",
                 options: [
                     { text: "咖啡，提神醒脑", next: 6, interference: true },
@@ -144,7 +142,7 @@
             { id: 5, question: "在急诊见习看到血肉模糊的场面，你的第一反应是？", icon: "🩸",
                 options: [
                     { text: "哇，这解剖结构好清晰！", next: "急诊科" },
-                    { text: "先深呼吸，再想怎么救", next: 11 }
+                    { text: "先深呼吸，再想怎么救", next: 11 },
                     { text: "掐紫皮肤送去皮肤科", next: "临床恶人" }
                 ]
             },
@@ -173,7 +171,6 @@
                     { text: "精雕细琢，显微镜级", next: 18 }
                 ]
             },
-            // 干扰题2
             { id: 10, question: "你更喜欢猫还是狗？", icon: "🐱",
                 options: [
                     { text: "萌萌可爱捏！", next: 19, interference: true },
@@ -192,7 +189,6 @@
                     { text: "您听不懂可以去耳科", next: 20 }
                 ]
             },
-            // 新增：传染病相关
             { id: 13, question: "你能接受长期穿隔离服、做防护吗？", icon: "🦠",
                 options: [
                     { text: "我觉得比体能服都舒服", next: "传染病科" },
@@ -236,7 +232,6 @@
                     { text: "猜这个病人能活多久", next: "病理科" }
                 ]
             },
-            // 新增：老年医学
             { id: 20, question: "你愿意长期照顾行动不便的老年患者吗？", icon: "👴",
                 options: [
                     { text: "愿意，万一是首长呢", next: "老年医学科" },
@@ -268,7 +263,6 @@
                     { text: "蓝色系", next: "心内科" }
                 ]
             },
-            // 干扰题3 + 新增胸外科入口
             { id: 25, question: "你能忍受长时间站立做精细操作吗？", icon: "🦵",
                 options: [
                     { text: "能，站一天都没问题", next: "胸外科" },
@@ -284,7 +278,6 @@
         ];
 
         const results = {
-            // 原有结果保持不变，新增以下科室
             "重症医学科": { icon: "🩹", title: "重症医学科（ICU）", subtitle: "生死一线·多器官守护",
                 comment: "你对危重患者的肾上腺素反应极强，这正是ICU需要的品质。这里每分钟都在和死神赛跑，你的冷静与果敢会成为患者的救命稻草。不过记得保护好自己，别把自己也卷进去了～" },
             "传染病科": { icon: "🦠", title: "传染病科", subtitle: "防控先锋",
@@ -295,7 +288,6 @@
                 comment: "能长时间站立做精细操作的你，适合胸外科的高难度手术。开胸、肺叶切除、食道重建……技术含量拉满，成就感也爆棚。" },
             "新生儿科": { icon: "👶", title: "新生儿科", subtitle: "最柔软的守护",
                 comment: "喜欢新生儿啼哭却又觉得吵的你，其实非常适合新生儿科。这里宝宝们脆弱又坚韧，你需要极细致的观察和照护。" },
-            // 保留原有所有结果（精神科、急诊科、内科等……）
             "精神科": { icon: "🧠", title: "长征/长海-医学心理科", subtitle: "专注力·情绪稳定",
                 comment: "你能长时间专注于一件事，这种超强注意力正是心理科医生听患者哭诉两小时最需要的品质。面对各种‘我被外星人控制’的奇妙故事，你还能保持冷静，耐心倾听，成为他们心灵的港湾。不过，记得下班后也要照顾好自己的情绪哦～" },
             "急诊科": { icon: "🚑", title: "野战急诊科", subtitle: "多任务处理·时间管理",
@@ -364,20 +356,19 @@
         }
 
         function calculateProgress() {
-            return Math.min(Math.round((answeredCount / 13) * 100), 100); // 目标平均13题左右
+            return Math.min(Math.round((answeredCount / 13) * 100), 100);
         }
 
         function renderStart() {
             const content = `
                 <div class="icon">🏥</div>
-                <h1>海鸭蛋毕业科室分配系统 2.2</h1>
+                <h1>海鸭蛋天选科室分配系统 1.0</h1>
                 <p class="subtitle">
-                    医学生毕业选科室纠结症候群？<br>
-                    来测测看，纯娱乐参考～<br>
-                    <small>（界面升级 + 更多科室 + 隐藏干扰题）</small>
+                    不知道去哪个科室<br>
+                    来测测看，你的天选之地！<br>
                 </p>
-                <button class="action-btn" onclick="startTest()">开始测试</button>
-                <p class="footer">结果仅供娱乐 · 人生方向自己决定</p>
+                <button class="action-btn" onclick="startTest()">上临床咯</button>
+                <p class="footer">结果仅供鱼乐，人生方向自己决定</p>
             `;
             renderCard(content);
         }
@@ -407,8 +398,8 @@
         }
 
         function renderResult(department) {
-            const result = results[department] || results["内科"]; // 兜底
-            const match = Math.floor(Math.random() * 20) + 75; // 75%-95% 娱乐匹配度
+            const result = results[department] || results["内科"];
+            const match = Math.floor(Math.random() * 20) + 75;
 
             const content = `
                 <div class="result-icon">${result.icon}</div>
@@ -433,7 +424,6 @@
             history.push(currentQuestion);
             answeredCount++;
 
-            // 干扰题不影响路径，但计入计数
             if (typeof next === 'number') {
                 currentQuestion = next;
                 renderQuestion(next);
