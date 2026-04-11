@@ -1,455 +1,487 @@
+<!--
+更新内容
+1.0.1 -优化了部分表述
+2.0 -几乎重做，改成积分制
+2.1 -超级大优化，懒得写了
+-->
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>海鸭蛋毕业科室分配系统 1.0</title>
+    <title>NMUTI-24 医学生科室相性倾向测评</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
-            background: linear-gradient(135deg, #0d47a1 0%, #26a69a 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            color: #222;
+        body { 
+            font-family: "Microsoft YaHei", system-ui, sans-serif; 
+            background: linear-gradient(135deg, #f0f7ff, #e6f0fa); 
+            margin: 0; 
+            padding: 20px; 
+            color: #333; 
         }
-        .container { width: 100%; max-width: 540px; }
+        .container { 
+            max-width: 960px; 
+            margin: 0 auto; 
+            background: white; 
+            border-radius: 16px; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.12); 
+            overflow: hidden; 
+        }
+        header { 
+            background: linear-gradient(90deg, #1e88e5, #1565c0); 
+            color: white; 
+            padding: 40px 30px; 
+            text-align: center; 
+        }
+        h1 { margin: 0; font-size: 32px; }
+        .subtitle { opacity: 0.95; font-size: 17px; margin-top: 10px; }
 
-        .card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 32px;
-            box-shadow: 0 20px 60px rgba(13, 71, 161, 0.25);
-            padding: 40px 32px;
+        /* 欢迎页面 */
+        #welcome-page {
+            padding: 60px 40px;
             text-align: center;
-            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-            opacity: 0;
-            transform: translateY(30px) scale(0.95);
         }
-        .card.show { opacity: 1; transform: translateY(0) scale(1); }
-
-        .icon { font-size: 78px; margin-bottom: 20px; }
-        .progress-container {
-            margin-bottom: 24px;
+        #welcome-page h2 {
+            color: #1565c0;
+            font-size: 26px;
+            margin-bottom: 20px;
         }
-        .progress {
-            height: 8px; background: #e0f2f1; border-radius: 9999px; overflow: hidden;
+        #welcome-page p {
+            font-size: 17px;
+            line-height: 1.7;
+            color: #555;
+            max-width: 680px;
+            margin: 0 auto 40px;
         }
-        .progress-bar {
-            height: 100%; background: linear-gradient(90deg, #26a69a, #00796b);
-            border-radius: 9999px; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .progress-text { font-size: 0.9em; color: #555; margin-top: 6px; }
-
-        h1 { color: #00695c; font-size: 1.95em; margin-bottom: 12px; line-height: 1.3; }
-        .subtitle { color: #455a64; font-size: 1.02em; margin-bottom: 32px; line-height: 1.6; }
-
-        .question {
-            font-size: 1.35em; color: #1a2a3c; margin-bottom: 32px;
-            font-weight: 600; line-height: 1.45;
-        }
-
-        .options { display: flex; flex-direction: column; gap: 16px; }
-        .option-btn {
-            background: linear-gradient(135deg, #f1f8f7 0%, #e0f2f1 100%);
-            border: 2px solid #b2dfdb;
-            border-radius: 20px;
-            padding: 20px 28px;
-            font-size: 1.1em;
-            color: #263238;
+        .start-btn {
+            background: #1565c0;
+            color: white;
+            border: none;
+            padding: 16px 48px;
+            font-size: 19px;
+            border-radius: 12px;
             cursor: pointer;
-            transition: all 0.35s ease;
-            text-align: left;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s;
         }
-        .option-btn:hover {
-            transform: translateX(12px);
-            border-color: #26a69a;
-            box-shadow: 0 8px 20px rgba(38, 166, 154, 0.25);
+        .start-btn:hover {
+            background: #0d47a1;
+            transform: translateY(-2px);
         }
 
-        .result-icon { font-size: 92px; margin-bottom: 20px; animation: pop 0.8s ease; }
-        @keyframes pop { 0% { transform: scale(0.6); } 60% { transform: scale(1.15); } 100% { transform: scale(1); } }
-
-        .result-title { font-size: 2.2em; color: #00695c; margin-bottom: 8px; font-weight: 700; }
-        .match-tag {
-            display: inline-block; padding: 6px 18px; background: #e0f2f1;
-            color: #00695c; border-radius: 9999px; font-size: 0.95em; margin-bottom: 16px;
+        .section { padding: 30px; }
+        .progress { 
+            height: 8px; 
+            background: #bbdefb; 
+            margin: 20px 0; 
+            border-radius: 4px; 
+            overflow: hidden; 
         }
-        .result-subtitle {
-            font-size: 1.2em; color: #00796b; margin-bottom: 24px;
-            padding: 10px 32px; background: #f1f8f7; border-radius: 30px;
+        .progress-bar { 
+            height: 100%; 
+            background: linear-gradient(90deg, #1e88e5, #1565c0); 
+            width: 0%; 
+            transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); 
         }
-        .result-comment {
-            text-align: left; color: #37474f; font-size: 1.06em; line-height: 1.8;
-            margin-bottom: 32px; padding: 24px;
-            background: #f9fbe7; border-radius: 20px;
-            border-left: 6px solid #9ccc65;
-        }
-
-        .action-btn {
-            background: linear-gradient(135deg, #26a69a, #00796b);
-            color: white; border: none; border-radius: 9999px;
-            padding: 18px 52px; font-size: 1.15em; cursor: pointer;
-            transition: all 0.3s ease; font-weight: 600;
-        }
-        .action-btn:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0, 121, 107, 0.4); }
-
-        .back-btn {
-            margin-top: 24px; background: none; border: 2px solid #90a4ae;
-            color: #546e7a; padding: 10px 28px; border-radius: 9999px; font-size: 0.95em;
+        .progress-text {
+            text-align: center;
+            color: #666;
+            font-size: 15px;
+            margin-bottom: 10px;
         }
 
-        .footer { margin-top: 32px; color: #78909c; font-size: 0.88em; }
+        .dimension h2 { 
+            color: #1565c0; 
+            border-bottom: 2px solid #bbdefb; 
+            padding-bottom: 12px; 
+            font-size: 22px;
+        }
+        .question { 
+            margin-bottom: 30px; 
+            padding: 24px; 
+            background: #f8fbff; 
+            border-radius: 14px; 
+            border-left: 6px solid #1e88e5; 
+        }
+        .question label { 
+            display: block; 
+            margin-bottom: 20px; 
+            font-weight: 500; 
+            font-size: 17px;
+            line-height: 1.6;
+        }
+        .options { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px; 
+        }
+        .option { 
+            padding: 16px 20px; 
+            background: white; 
+            border: 2px solid #e0e0e0; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 16px;
+        }
+        .option:hover { 
+            border-color: #1e88e5; 
+            background: #f0f7ff;
+            transform: translateX(4px);
+        }
+        .option.selected { 
+            background: #e3f2fd; 
+            border-color: #1565c0; 
+            color: #1565c0; 
+            font-weight: 600; 
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(21, 101, 192, 0.15);
+        }
+
+        button { 
+            background: #1565c0; 
+            color: white; 
+            border: none; 
+            padding: 14px 36px; 
+            font-size: 17px; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            margin: 10px 8px;
+            transition: all 0.2s;
+        }
+        button:hover { background: #0d47a1; }
+        button:disabled { background: #aaa; cursor: not-allowed; }
+
+        .result { display: none; padding: 40px 30px; }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin: 25px 0; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        th, td { 
+            padding: 14px; 
+            text-align: left; 
+            border: 1px solid #ddd; 
+        }
+        th { 
+            background: #e3f2fd; 
+            font-weight: 600;
+        }
+        .recommend { 
+            background: #e8f5e9; 
+            padding: 22px; 
+            border-radius: 12px; 
+            margin: 18px 0; 
+            border-left: 6px solid #4caf50; 
+        }
+        .dept-name {
+            font-size: 19px;
+            margin: 8px 0 12px 0;
+        }
+        .distance { 
+            font-size: 15px; 
+            color: #555; 
+            margin-top: 8px;
+        }
+        .warning {
+            background: #fff3e0;
+            padding: 18px;
+            border-radius: 10px;
+            border-left: 6px solid #ff9800;
+            margin: 25px 0;
+            font-size: 15px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="card" id="card"></div>
+
+        <!-- 欢迎页面 -->
+        <div id="welcome-page">
+            <h1>📌 NMUTI-24</h1>
+            <p class="subtitle">医学生六维职业契合度测评系统（PRO版）</p>
+            
+            <h2>欢迎使用本测评工具</h2>
+            <p>
+                这是一套医学生版的MBTI，周四V我50直通心愿科室。<br>
+                通过24道精心设计的题目，我们将从<strong>决断力、共情力、细节敏感、抗压能力、学术钻研、沟通协调</strong>六个维度全面刻画你的性格画像。<br><br>
+                不过如果你真信这玩意儿，建议还是早点洗洗睡吧。
+            </p>
+            <button class="start-btn" onclick="startTest()">开始测评</button>
+        </div>
+
+        <!-- 测评页面 -->
+        <div id="test-page" class="section" style="display: none;">
+            <div class="progress-text">
+                已完成 <span id="progress-text">0</span>/24 题
+            </div>
+            <div class="progress"><div id="progress-bar" class="progress-bar"></div></div>
+
+            <div id="questions"></div>
+
+            <div style="text-align:center; margin-top: 30px;">
+                <button id="prev-btn" onclick="prevQuestion()" style="display:none;">← 上一步</button>
+                <button id="next-btn" onclick="nextQuestion()" style="display:none;">下一步 →</button>
+            </div>
+        </div>
+
+        <!-- 结果页面 -->
+        <div id="result-page" class="result">
+            <h2 style="color:#1565c0; text-align:center;">🎯 您的测评结果</h2>
+            
+            <div id="score-summary" style="margin:30px 0; font-size:18px; line-height:1.7;"></div>
+
+            <h3>📊 您的六维得分（满分20分）</h3>
+            <table id="score-table">
+                <thead>
+                    <tr>
+                        <th>维度</th>
+                        <th>得分</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <h3>🏥 最匹配的三个科室推荐</h3>
+            <div id="recommendations"></div>
+
+            <div class="warning">
+                ⚠️ 测评仅供参考，实际职业选择还需结合个人兴趣、身体条件、家庭因素及就业市场综合考虑。
+            </div>
+
+            <div style="text-align:center; margin-top:50px;">
+                <button onclick="restartTest()" style="background:#ff9800; padding:14px 40px;">重新测评</button>
+            </div>
+        </div>
     </div>
 
     <script>
+        // 24道题目（保持不变）
         const questions = [
-            { id: 1, question: "当你在医院上实习课时，你的状态是？", icon: "🤔",
-                options: [
-                    { text: "我一直在跟着老师冲！", next: 2 },
-                    { text: "大脑在转，但人已经呆了", next: 3 },
-                    { text: "我躲在后面抠手机", next: 3 },
-                    { text: "我看着每个人的一举一动", next: 7 },
-                    { text: "原地倒下假装自己猝死了考察同学的CRP", next: "临床恶人" }
-                ]
-            },
-            { id: 2, question: "你的注意力属于哪种类型？", icon: "👀",
-                options: [
-                    { text: "超级集中，时刻在线", next: 4 },
-                    { text: "注意力分散，学医害的", next: 5 }
-                ]
-            },
-            { id: 3, question: "你更喜欢咖啡还是茶？", icon: "☕",
-                options: [
-                    { text: "咖啡，提神醒脑", next: 6, interference: true },
-                    { text: "茶，静心养性", next: 6, interference: true }
-                ]
-            },
-            { id: 4, question: "你的性格脾气怎么样？", icon: "😤",
-                options: [
-                    { text: "温润如玉，患者打我我夸他有力气", next: 8 },
-                    { text: "一点就炸，跟患者对打", next: 9 },
-                    { text: "不好不坏，绝对中立", next: 10 }
-                ]
-            },
-            { id: 5, question: "在急诊见习看到血肉模糊的场面，你的第一反应是？", icon: "🩸",
-                options: [
-                    { text: "哇，这解剖结构好清晰！", next: "急诊科" },
-                    { text: "先深呼吸，再想怎么救", next: 11 },
-                    { text: "掐紫皮肤送去皮肤科", next: "临床恶人" }
-                ]
-            },
-            { id: 6, question: "你喜欢和什么年龄段的人打交道？", icon: "👶👴",
-                options: [
-                    { text: "能讲明白病史的成年人", next: 12 },
-                    { text: "可可爱爱的小朋友", next: "儿科" },
-                    { text: "无所谓，活的就行", next: 13 }
-                ]
-            },
-            { id: 7, question: "你喜欢热闹还是安静？", icon: "🎉",
-                options: [
-                    { text: "社交达人，越多越嗨", next: 14 },
-                    { text: "社恐本恐，享受独处", next: 15 }
-                ]
-            },
-            { id: 8, question: "面对生命体征急剧波动的患者，你的第一反应是？", icon: "📉",
-                options: [
-                    { text: "肾上腺素也跟着狂飙，准备上阵", next: "重症医学科" },
-                    { text: "需要冷静分析，抽丝剥茧", next: 16 }
-                ]
-            },
-            { id: 9, question: "你喜欢做什么类型的操作？", icon: "🔪",
-                options: [
-                    { text: "大刀阔斧，粗犷豪放", next: 17 },
-                    { text: "精雕细琢，显微镜级", next: 18 }
-                ]
-            },
-            { id: 10, question: "你更喜欢猫还是狗？", icon: "🐱",
-                options: [
-                    { text: "萌萌可爱捏！", next: 19, interference: true },
-                    { text: "药学院小狗可爱捏！（据说是23精神某人的哥哥）", next: 19, interference: true }
-                ]
-            },
-            { id: 11, question: "你更喜欢什么光线环境？", icon: "💡",
-                options: [
-                    { text: "喜欢黑暗，按时熄灯", next: "影像科" },
-                    { text: "喜欢明亮，不夜之握", next: "检验科" }
-                ]
-            },
-            { id: 12, question: "面对慢性病患者，你最有耐心的是？", icon: "🩺",
-                options: [
-                    { text: "我再给您讲一遍", next: "内科" },
-                    { text: "您听不懂可以去耳科", next: 20 }
-                ]
-            },
-            { id: 13, question: "你能接受长期穿隔离服、做防护吗？", icon: "🦠",
-                options: [
-                    { text: "我觉得比体能服都舒服", next: "传染病科" },
-                    { text: "我会先于病人倒下", next: 21 }
-                ]
-            },
-            { id: 14, question: "你的行动力如何？", icon: "🏃",
-                options: [
-                    { text: "雷厉风行，实践圣体", next: 22 },
-                    { text: "观望观望，假装摸鱼", next: 23 }
-                ]
-            },
-            { id: 15, question: "你对‘死亡’这个话题的态度是？", icon: "⚰️",
-                options: [
-                    { text: "能接受，但事情不该是这样的", next: "肿瘤科" },
-                    { text: "我们在阴影中思考并得到走出死亡的力量", next: "病理科" }
-                ]
-            },
-            { id: 16, question: "你喜欢新生儿的第一声啼哭吗？", icon: "👶",
-                options: [
-                    { text: "喜欢，幼崽可爱捏", next: "妇产科" },
-                    { text: "好吵，踹飞", next: "新生儿科" }
-                ]
-            },
-            { id: 17, question: "你的身体素质如何？", icon: "🏋️",
-                options: [
-                    { text: "体测可以优秀", next: "骨科" },
-                    { text: "七圈跑碎报国梦，其实我是无菌的", next: "皮肤科" }
-                ]
-            },
-            { id: 18, question: "你对手术精度的要求是？", icon: "🧵",
-                options: [
-                    { text: "不允许误差，必须完美", next: "神经外科" },
-                    { text: "差不多得了谁管肝脏在左边右边呢", next: "普外科" }
-                ]
-            },
-            { id: 19, question: "当你在手术室观摩时，你在干嘛？", icon: "😴",
-                options: [
-                    { text: "目不转睛盯着手术台", next: 24 },
-                    { text: "站着睡", next: "麻醉科" },
-                    { text: "猜这个病人能活多久", next: "病理科" }
-                ]
-            },
-            { id: 20, question: "你愿意长期照顾行动不便的老年患者吗？", icon: "👴",
-                options: [
-                    { text: "愿意，万一是首长呢", next: "老年医学科" },
-                    { text: "有点吃力，但为了工资…", next: 25 }
-                ]
-            },
-            { id: 21, question: "你能接受每天和血液、尿液、粪便打交道吗？", icon: "🧪",
-                options: [
-                    { text: "还有加餐？", next: "检验科" },
-                    { text: "退退退！", next: "呼吸科" }
-                ]
-            },
-            { id: 22, question: "你喜欢和患者聊天吗？", icon: "🗣️",
-                options: [
-                    { text: "喜欢，听他们讲故事也是摸鱼", next: "精神科" },
-                    { text: "不喜欢，别说话了你", next: "口腔科" }
-                ]
-            },
-            { id: 23, question: "你对手术后的‘美’有追求吗？", icon: "✂️",
-                options: [
-                    { text: "非常有追求，想让患者变美", next: "整形外科" },
-                    { text: "没啥追求，这部还活着吗", next: "泌尿外科" }
-                ]
-            },
-            { id: 24, question: "你更偏好什么颜色？", icon: "🎨",
-                options: [
-                    { text: "红色系", next: "耳鼻喉科" },
-                    { text: "黑色系", next: "眼科" },
-                    { text: "蓝色系", next: "心内科" }
-                ]
-            },
-            { id: 25, question: "你能忍受长时间站立做精细操作吗？", icon: "🦵",
-                options: [
-                    { text: "能，站一天都没问题", next: "胸外科" },
-                    { text: "不太行，腿会酸", next: 26 }
-                ]
-            },
-            { id: 26, question: "你相信望闻问切的价值吗？", icon: "🌿",
-                options: [
-                    { text: "相信，中医有它的道理", next: "中医科" },
-                    { text: "还是相信现代仪器", next: 24 }
-                ]
-            }
+            { id:1, dim:"DER", q:"遇到突发紧急情况时，我通常是第一个站出来制定计划的人，而不是等待指示。" },
+            { id:2, dim:"DER", q:"即使在信息不充分的情况下，我也能快速拍板做决定，并敢于承担后果。" },
+            { id:3, dim:"DER", q:"在混乱嘈杂、多线并行的环境中（如车祸现场或急救室），我反而能保持头脑清醒。" },
+            { id:4, dim:"DER", q:"我倾向于“先行动控制局面，再复盘分析细节”，而不是“没想清楚绝对不行动”。" },
+
+            { id:5, dim:"EHC", q:"当朋友倾诉痛苦时，我很容易感同身受，甚至会因为他们的遭遇而情绪低落。" },
+            { id:6, dim:"EHC", q:"我认为安抚患者的情绪、解释病情，与开出正确的处方同等重要。" },
+            { id:7, dim:"EHC", q:"我能敏锐地察觉到陌生人非语言的微表情或肢体动作所传达的不安与焦虑。" },
+            { id:8, dim:"EHC", q:"即使工作很忙，我也愿意多花几分钟倾听患者与疾病无关的“牢骚”或家庭背景。" },
+
+            { id:9, dim:"PDO", q:"我非常享受拼图、模型制作或外科打结等需要长时间极度专注和手眼协调的活动。" },
+            { id:10,dim:"PDO", q:"在阅读冗长的文件或报告时，我总能一眼发现别人容易忽略的微小错漏。" },
+            { id:11,dim:"PDO", q:"我可以在显微镜下或盯着狭小视野进行连续数小时的操作，而不会感到极度烦躁。" },
+            { id:12,dim:"PDO", q:"我有强烈的“强迫症”，喜欢严格按照SOP（标准作业程序）和核对表做事。" },
+
+            { id:13,dim:"SHT", q:"即使连续熬夜、睡眠严重不足，我的情绪依然相对平稳，不会轻易暴躁。" },
+            { id:14,dim:"SHT", q:"面对不可挽回的挫折（如尽力后依然失败），我能迅速调整心态，不长期内耗。" },
+            { id:15,dim:"SHT", q:"我的身体素质很好，能够适应黑白颠倒的夜班和不规律的饮食节奏。" },
+            { id:16,dim:"SHT", q:"我能很好地将工作中的负面情绪（如见证生老病死）与个人生活剥离开来。" },
+
+            { id:17,dim:"ALR", q:"相比于直接得到答案，我更享受为了一个罕见现象去翻阅大量文献的过程。" },
+            { id:18,dim:"ALR", q:"我喜欢玩逻辑推理游戏或看悬疑小说，擅长从纷繁复杂的线索中推导出真相。" },
+            { id:19,dim:"ALR", q:"对于疾病的底层分子机制或病理生理学基础，我有着强烈的探究欲。" },
+            { id:20,dim:"ALR", q:"我对参与临床试验、撰写论文或进行基础科学研究充满热情。" },
+
+            { id:21,dim:"CSI", q:"在团队协作中，我通常担任协调者，擅长化解成员间的冲突并合理分配任务。" },
+            { id:22,dim:"CSI", q:"面对脾气暴躁或固执的人，我依然有耐心且有策略地说服他们。" },
+            { id:23,dim:"CSI", q:"我非常享受与不同背景、不同专业的人（如其他科室、护士、家属）跨部门协作。" },
+            { id:24,dim:"CSI", q:"在面对无理取闹或医患纠纷苗头时，我懂得如何用沟通技巧“降温”和化解危机。" }
         ];
 
-        const results = {
-            "重症医学科": { icon: "🩹", title: "重症医学科（ICU）", subtitle: "生死一线·多器官守护",
-                comment: "你对危重患者的肾上腺素反应极强，这正是ICU需要的品质。这里每分钟都在和死神赛跑，你的冷静与果敢会成为患者的救命稻草。不过记得保护好自己，别把自己也卷进去了～" },
-            "传染病科": { icon: "🦠", title: "传染病科", subtitle: "防控先锋",
-                comment: "你能接受高防护工作，说明内心强大且有责任感。传染病科需要你既懂临床又懂流行病学，未来公共卫生事件中，你会是重要力量。" },
-            "老年医学科": { icon: "👴", title: "老年医学科", subtitle: "银发守护者",
-                comment: "愿意照顾老年患者的你，在老龄化社会中非常宝贵。这里需要极强的耐心和共情能力，你会成为很多家庭的依靠。" },
-            "胸外科": { icon: "🫁", title: "胸外科", subtitle: "胸腔开拓者",
-                comment: "能长时间站立做精细操作的你，适合胸外科的高难度手术。开胸、肺叶切除、食道重建……技术含量拉满，成就感也爆棚。" },
-            "新生儿科": { icon: "👶", title: "新生儿科", subtitle: "最柔软的守护",
-                comment: "喜欢新生儿啼哭却又觉得吵的你，其实非常适合新生儿科。这里宝宝们脆弱又坚韧，你需要极细致的观察和照护。" },
-            "精神科": { icon: "🧠", title: "长征/长海-医学心理科", subtitle: "专注力·情绪稳定",
-                comment: "你能长时间专注于一件事，这种超强注意力正是心理科医生听患者哭诉两小时最需要的品质。面对各种‘我被外星人控制’的奇妙故事，你还能保持冷静，耐心倾听，成为他们心灵的港湾。不过，记得下班后也要照顾好自己的情绪哦～" },
-            "急诊科": { icon: "🚑", title: "野战急诊科", subtitle: "多任务处理·时间管理",
-                comment: "注意力分散的你反而是急诊科的天选之人！这里需要你同时处理十几个问题，切换自如。就是记得多喝咖啡续命，半夜被叫醒的时候别骂娘就行。" },
-            "内科": { icon: "💊", title: "内科", subtitle: "慢性病管理·问诊",
-                comment: "温润如玉的你适合内科。患者会把一辈子的病史都倒给你，你得有耐心听完。门诊挂号费可能要涨一点，因为你的问诊时间平均1小时起步。" },
-            "儿科": { icon: "👶", title: "儿科", subtitle: "哄娃专家",
-                comment: "喜欢小朋友的你，天生适合儿科。不过要有心理准备——你的患者可能会在你问诊时大哭、在你看病时满地乱爬、在家长身后捉迷藏……勇敢牛牛，不怕困难！" },
-            "妇产科": { icon: "🤰", title: "妇产科", subtitle: "新生命迎接者",
-                comment: "对生活品质要求不高的你，非常适合妇产科的高强度工作。节奏快、压力大，但每次听到新生儿的第一声啼哭，你都会觉得一切都值得。加油，未来的接生圣手！" },
-            "家庭医生（全科医学）": { icon: "🏠", title: "全科医学", subtitle: "全能·社区健康",
-                comment: "有洁癖的你追求完美，很适合全科。社区居民的健康第一接触点，需要整洁有序的工作习惯。你的存在，就是居民健康的定心丸。" },
-            "普外科": { icon: "🔪", title: "普外科", subtitle: "神之手·刀法豪放",
-                comment: "粗犷豪放的性格让你在普外科如鱼得水。切得快、缝得快、术后恢复更快。不过记得温柔一点，患者不是猪肉，术后别忘了查房哦～" },
-            "神经外科": { icon: "🧠", title: "神经外科", subtitle: "显微手艺人",
-                comment: "精雕细琢的你简直是神经外科的天才。在直径几毫米的血管上缝合是日常，手抖0.1毫米就是医疗事故。你的手比机器人还稳，欢迎加入‘脑科天团’！" },
-            "骨科": { icon: "🦴", title: "骨科", subtitle: "力量型·装修工",
-                comment: "健身达人的你，是骨科的标配。搬大腿、拉锯子、扛锤子……这是正经医疗操作，不是装修施工。记得保护好自己的腰，别到40岁就腰椎间盘突出。" },
-            "皮肤科": { icon: "🧴", title: "皮肤科", subtitle: "颜值守护者",
-                comment: "手无缚鸡之力的你，却有细心和审美。每天都会遇到‘医生我这个痣是不是癌’的灵魂拷问。保持微笑，这里是颜值与自信的修复站。" },
-            "耳鼻喉科": { icon: "👂", title: "耳鼻喉科", subtitle: "五官全能",
-                comment: "热情张扬的你能说会道，适合耳鼻喉科。这里器官弯弯曲曲，需要空间想象力。你的沟通能力能让紧张的患者快速放松。" },
-            "眼科": { icon: "👁️", title: "眼科", subtitle: "光明使者",
-                comment: "深邃神秘的你和眼科绝配。在眼球上做手术需要绝对精准，你的性格完美契合。顺便说一句，这个科室夜班相对少，值得考虑。" },
-            "泌尿外科": { icon: "💧", title: "泌尿外科", subtitle: "液体平衡专家",
-                comment: "活力满满的你适合节奏相对可控的泌尿外科。手术时间友好，工作强度比其他外科轻一些，是个性价比之选。" },
-            "影像科": { icon: "🌑", title: "影像科", subtitle: "读片专家",
-                comment: "喜欢黑暗的你，完美适合影像科。整天窝在昏暗的读片室，和黑白灰的CT/MRI打交道。没有急诊的惊心动魄，只有日复一日的平静……太爽了。" },
-            "检验科": { icon: "🔬", title: "检验科", subtitle: "实验达人",
-                comment: "喜欢明亮环境的你适合检验科。这里灯永远亮着，你每天和血液、尿液、粪便打交道……别吐，深呼吸，加油！" },
-            "麻醉科": { icon: "😴", title: "麻醉科", subtitle: "睡眠创造者",
-                comment: "站着都能睡着的你，是麻醉科的梦中情医。你需要在手术中保持高度警惕，同时拥有快速入睡、快速清醒的绝技——你全都会！" },
-            "病理科": { icon: "🔬", title: "病理科", subtitle: "终极审判",
-                comment: "研究‘死亡’的你内心足够强大。病理科医生被称为‘医生的医生’，你的诊断决定了一个家庭的后续方向。虽然不直接接触患者，但责任比山还重。" },
-            "神经内科": { icon: "🧠", title: "神经内科", subtitle: "脑沟探索者",
-                comment: "对迟钝有独特包容的你，非常适合神经内科。患者症状复杂，需要你有足够的耐心去推理、排查。恭喜你，已经掌握了医学的‘玄学’。" },
-            "康复医学科": { icon: "💪", title: "康复医学科", subtitle: "希望播种者",
-                comment: "敏感细腻的你适合康复医学。这里需要你关注患者的每一个细微进步，给予持续的希望和鼓励。你就是患者康复路上的那束光。" },
-            "心内科": { icon: "❤️", title: "心内科", subtitle: "心脏守护者",
-                comment: "冷静专业的你，适合和‘心’打交道。心梗、心衰、心律失常……你需要快速决策，同时给患者和家属信心。这里压力不小，但成就感也爆棚。" },
-            "呼吸科": { icon: "🫁", title: "呼吸科", subtitle: "氧气供应站",
-                comment: "能接受各种体液的你，适合呼吸科。肺炎、慢阻肺、肺癌……你会成为患者呼吸顺畅的守护者。疫情期间你可能会很忙，提前做好心理建设。" },
-            "肿瘤科": { icon: "🎗️", title: "肿瘤科", subtitle: "抗癌战士",
-                comment: "能接受死亡话题的你，内心强大。肿瘤科需要你不仅治病，还要治心。患者和家属的情绪管理是日常，加油，你能带给他们希望。" },
-            "口腔科": { icon: "🦷", title: "口腔科", subtitle: "牙齿美容师",
-                comment: "不喜欢被患者拉着聊一小时的你，适合口腔科。这里患者大多张着嘴，你可以少听废话，多干实事。拔牙、种牙、矫正，技术活儿拉满。" },
-            "整形外科": { icon: "✂️", title: "整形外科", subtitle: "美学创造者",
-                comment: "对手术后‘美’有追求的你，来整形外科准没错。这里不仅要治病，还要让患者变美。记住：刀下留情，审美在线。" },
-            "中医科": { icon: "🌿", title: "中医科", subtitle: "整体观·辨证施治",
-                comment: "你对传统医学有天然的亲切感，喜欢从整体看问题，而不是头痛医头脚痛医脚。中医科需要耐心、细致的望闻问切，还得能跟患者聊聊生活习惯和情绪。你这种‘不急不躁’的性格，在这里会很有用武之地。不过，记得把西医知识也学扎实，别被老教授们卷到怀疑人生～" },
-            "临床恶人": { icon: "？", title: "临床恶人", subtitle: "你是？",
-                comment: "请速度联系长海医院医学心理科，准备办理休学手续。" }
+        // 科室库（已统一添加英文缩写）
+        const departments = [
+            { name: "急诊科", abbr: "ED",          der:20, ehc:10, pdo:14, sht:20, alr:13, csi:15 },
+            { name: "重症医学", abbr: "ICU",       der:19, ehc:8,  pdo:16, sht:20, alr:16, csi:14 },
+            { name: "普通外科", abbr: "GS",        der:18, ehc:10, pdo:17, sht:18, alr:12, csi:12 },
+            { name: "骨科", abbr: "Ortho",         der:17, ehc:9,  pdo:15, sht:19, alr:11, csi:12 },
+            { name: "妇产科", abbr: "OB/GYN",      der:18, ehc:14, pdo:16, sht:19, alr:11, csi:15 },
+            { name: "麻醉科", abbr: "Anesth",      der:18, ehc:6,  pdo:17, sht:17, alr:15, csi:10 },
+            { name: "心血管内科", abbr: "Cardio",  der:16, ehc:12, pdo:16, sht:17, alr:17, csi:14 },
+            { name: "神经内科", abbr: "Neuro",     der:10, ehc:14, pdo:16, sht:12, alr:19, csi:14 },
+            { name: "肿瘤内科", abbr: "Onco",      der:11, ehc:18, pdo:14, sht:16, alr:18, csi:16 },
+            { name: "儿科", abbr: "Peds",          der:14, ehc:20, pdo:12, sht:16, alr:12, csi:18 },
+            { name: "精神科", abbr: "Psych",       der:8,  ehc:18, pdo:8,  sht:12, alr:16, csi:18 },
+            { name: "全科医学", abbr: "FM",        der:12, ehc:16, pdo:12, sht:10, alr:12, csi:20 },
+            { name: "眼科/显微外科", abbr: "Ophth", der:13, ehc:11, pdo:20, sht:12, alr:14, csi:12 },
+            { name: "皮肤科", abbr: "Derm",        der:10, ehc:12, pdo:18, sht:8,  alr:14, csi:14 },
+            { name: "病理科", abbr: "Path",        der:8,  ehc:6,  pdo:19, sht:10, alr:19, csi:6  },
+            
+            // 新增科室
+            { name: "中医科", abbr: "TCM",         der:9,  ehc:16, pdo:14, sht:11, alr:17, csi:15 },
+            { name: "预防医学", abbr: "PrevMed",   der:7,  ehc:12, pdo:13, sht:9,  alr:18, csi:14 },
+            { name: "医学影像科", abbr: "Radiology", der:6, ehc:5,  pdo:19, sht:8,  alr:16, csi:7  },
+            { name: "康复医学科", abbr: "Rehab",   der:11, ehc:17, pdo:15, sht:13, alr:14, csi:16 },
+            
+            // 隐蔽科室
+            { name: "空降行政岗", abbr: "Admin",   der:0,  ehc:0,  pdo:0,  sht:0,  alr:0,  csi:0  }
+        ];
+
+        let answers = new Array(24).fill(0);
+        let currentQuestion = 0;
+
+        const dimNames = {
+            DER: "决断与应急响应 (DER)",
+            EHC: "共情与人文关怀 (EHC)",
+            PDO: "精细操作与细节敏感 (PDO)",
+            SHT: "抗压与高负荷耐受 (SHT)",
+            ALR: "逻辑推理与学术钻研 (ALR)",
+            CSI: "沟通与统筹协调 (CSI)"
         };
 
-        let currentQuestion = 0;
-        let history = [];
-        let answeredCount = 0;
-
-        function renderCard(content) {
-            const card = document.getElementById('card');
-            card.classList.remove('show');
-            setTimeout(() => {
-                card.innerHTML = content;
-                card.classList.add('show');
-            }, 300);
-        }
-
-        function calculateProgress() {
-            return Math.min(Math.round((answeredCount / 13) * 100), 100);
-        }
-
-        function renderStart() {
-            const content = `
-                <div class="icon">🏥</div>
-                <h1>海鸭蛋天选科室分配系统 1.0</h1>
-                <p class="subtitle">
-                    不知道去哪个科室<br>
-                    来测测看，你的天选之地！<br>
-                </p>
-                <button class="action-btn" onclick="startTest()">上临床咯</button>
-                <p class="footer">结果仅供鱼乐，人生方向自己决定</p>
-            `;
-            renderCard(content);
-        }
-
-        function renderQuestion(id) {
-            const q = questions.find(item => item.id === id);
-            if (!q) return;
-
-            const progress = calculateProgress();
-
-            let optionsHtml = q.options.map(opt => {
-                const nextVal = typeof opt.next === 'string' ? `'${opt.next}'` : opt.next;
-                return `<button class="option-btn" onclick="selectOption(${nextVal})">${opt.text}</button>`;
-            }).join('');
-
-            const content = `
-                <div class="progress-container">
-                    <div class="progress"><div class="progress-bar" style="width: ${progress}%"></div></div>
-                    <div class="progress-text">${progress}% · 已回答 ${answeredCount} 题</div>
-                </div>
-                <div class="icon">${q.icon}</div>
-                <p class="question">${q.question}</p>
-                <div class="options">${optionsHtml}</div>
-                ${history.length > 0 ? `<button class="back-btn" onclick="goBack()">← 返回上一题</button>` : ''}
-            `;
-            renderCard(content);
-        }
-
-        function renderResult(department) {
-            const result = results[department] || results["内科"];
-            const match = Math.floor(Math.random() * 20) + 75;
-
-            const content = `
-                <div class="result-icon">${result.icon}</div>
-                <h1 class="result-title">你的命中注定科室是</h1>
-                <div class="match-tag">匹配度 ${match}% 🔥</div>
-                <div class="result-subtitle">${result.title}</div>
-                <div class="result-comment">${result.comment}</div>
-                <button class="action-btn" onclick="restartTest()">🔄 再测一次</button>
-                <p class="footer">别当真了<br>先把期末考过了再说吧～</p>
-            `;
-            renderCard(content);
-        }
-
         function startTest() {
-            currentQuestion = 1;
-            history = [];
-            answeredCount = 0;
-            renderQuestion(1);
+            document.getElementById("welcome-page").style.display = "none";
+            document.getElementById("test-page").style.display = "block";
+            renderQuestion();
         }
 
-        function selectOption(next) {
-            history.push(currentQuestion);
-            answeredCount++;
+        function renderQuestion() {
+            const qContainer = document.getElementById("questions");
+            qContainer.innerHTML = "";
 
-            if (typeof next === 'number') {
-                currentQuestion = next;
-                renderQuestion(next);
-            } else if (typeof next === 'string') {
-                renderResult(next);
+            const q = questions[currentQuestion];
+            const html = `
+                <div class="dimension">
+                    <h2>第 ${currentQuestion + 1} 题 / 24</h2>
+                    <div class="question">
+                        <label>${q.q}</label>
+                        <div class="options" id="options-${q.id}">
+                            ${[1,2,3,4,5].map(score => `
+                                <div class="option ${answers[q.id-1] === score ? 'selected' : ''}" 
+                                     onclick="selectAnswer(${q.id}, ${score});">
+                                    ${score} 分 —— ${getOptionDesc(score)}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            qContainer.innerHTML = html;
+
+            document.getElementById("prev-btn").style.display = currentQuestion === 0 ? "none" : "inline-block";
+            document.getElementById("next-btn").style.display = currentQuestion === 23 ? "none" : "inline-block";
+
+            const progress = ((currentQuestion + 1) / 24) * 100;
+            document.getElementById("progress-bar").style.width = `${progress}%`;
+            document.getElementById("progress-text").textContent = currentQuestion + 1;
+        }
+
+        function getOptionDesc(score) {
+            const desc = ["完全不符合", "较不符合", "一般符合", "比较符合", "完全符合"];
+            return desc[score - 1];
+        }
+
+        function selectAnswer(qid, score) {
+            answers[qid - 1] = score;
+            
+            // 立即显示选中状态
+            const options = document.querySelectorAll(`#options-${qid} .option`);
+            options.forEach(opt => {
+                opt.classList.toggle('selected', parseInt(opt.getAttribute('onclick').match(/\d+/)[0]) === score);
+            });
+
+            // 提升流畅度的自动跳转
+            setTimeout(() => {
+                if (currentQuestion < 23) {
+                    currentQuestion++;
+                    renderQuestion();
+                } else {
+                    calculateResult();
+                }
+            }, 180);   // 优化为180ms，更丝滑
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < 23) {
+                currentQuestion++;
+                renderQuestion();
             }
         }
 
-        function goBack() {
-            if (history.length === 0) return;
-            answeredCount--;
-            currentQuestion = history.pop();
-            renderQuestion(currentQuestion);
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                renderQuestion();
+            }
+        }
+
+        function calculateScores() {
+            const scores = { DER:0, EHC:0, PDO:0, SHT:0, ALR:0, CSI:0 };
+            questions.forEach((q, index) => {
+                scores[q.dim] += answers[index];
+            });
+            return scores;
+        }
+
+        function euclideanDistance(user, dept) {
+            return Math.sqrt(
+                Math.pow(user.DER - dept.der, 2) +
+                Math.pow(user.EHC - dept.ehc, 2) +
+                Math.pow(user.PDO - dept.pdo, 2) +
+                Math.pow(user.SHT - dept.sht, 2) +
+                Math.pow(user.ALR - dept.alr, 2) +
+                Math.pow(user.CSI - dept.csi, 2)
+            );
+        }
+
+        function calculateResult() {
+            if (answers.includes(0)) {
+                alert("请完成所有题目后再查看结果！");
+                return;
+            }
+
+            const userScores = calculateScores();
+
+            const results = departments.map(dept => {
+                const dist = euclideanDistance(userScores, dept);
+                return { ...dept, distance: dist };
+            }).sort((a, b) => a.distance - b.distance);
+
+            document.getElementById("test-page").style.display = "none";
+            document.getElementById("result-page").style.display = "block";
+
+            // 得分表格
+            let scoreHTML = "";
+            Object.keys(userScores).forEach(dim => {
+                scoreHTML += `
+                    <tr>
+                        <td><strong>${dimNames[dim]}</strong></td>
+                        <td style="font-size:24px; font-weight:bold; color:#1565c0;">${userScores[dim]}</td>
+                        <td>满分20分</td>
+                    </tr>
+                `;
+            });
+            document.getElementById("score-table").querySelector("tbody").innerHTML = scoreHTML;
+
+            // 推荐科室（显示中文 + 英文缩写）
+            let recHTML = "";
+            for (let i = 0; i < 3; i++) {
+                const r = results[i];
+                recHTML += `
+                    <div class="recommend">
+                        <h3 class="dept-name">🥇 第 ${i+1} 推荐：${r.name} <strong>(${r.abbr})</strong></h3>
+                        <p class="distance">多维距离：${r.distance.toFixed(2)}（数值越小，匹配度越高）</p>
+                        <p><strong>匹配分析：</strong>懒得写了，等下次想起来再写。</p>
+                    </div>
+                `;
+            }
+            document.getElementById("recommendations").innerHTML = recHTML;
+
+            const typeDesc = (userScores.DER > 14 && userScores.SHT > 14) ? "高决断高抗压型" :
+                             (userScores.EHC > 15 && userScores.CSI > 15) ? "高共情高沟通型" : "均衡发展型";
+            document.getElementById("score-summary").innerHTML = `
+                <p>您的性格画像整体偏向<strong>${typeDesc}</strong>。<br>
+                系统已根据六维欧几里得距离为您计算出最适合的执业方向。以下三个科室是当前最优推荐。</p>
+            `;
         }
 
         function restartTest() {
+            answers = new Array(24).fill(0);
             currentQuestion = 0;
-            history = [];
-            answeredCount = 0;
-            renderStart();
+            document.getElementById("result-page").style.display = "none";
+            document.getElementById("welcome-page").style.display = "block";
         }
-
-        // 初始化
-        renderStart();
     </script>
 </body>
 </html>
