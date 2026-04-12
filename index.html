@@ -1,0 +1,4705 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>青岐复元——头颈一体中医快干预平台</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        /* ========== 基础样式重置 ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            /* 主色调 - 柔和绿色系 */
+            --primary: #66BB6A;
+            --primary-light: #81C784;
+            --primary-dark: #43A047;
+            --accent: #AED581;
+            
+            /* 背景色 - 温暖米灰 */
+            --bg-white: #FAFAFA;
+            --bg-gray: #F5F5F5;
+            --bg-light-green: #F1F8E9;
+            
+            /* 文字色 - 柔和对比 */
+            --text-dark: #424242;
+            --text-gray: #757575;
+            --text-light: #9E9E9E;
+            
+            /* 边框和阴影 - 轻柔 */
+            --border: #EEEEEE;
+            --shadow: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-hover: 0 2px 8px rgba(0,0,0,0.08);
+            
+            /* 圆角 - 适度 */
+            --radius: 8px;
+            --radius-lg: 12px;
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: var(--bg-gray);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* ========== App容器 ========== */
+        .app {
+            max-width: 750px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background: var(--bg-white);
+            position: relative;
+        }
+        
+        /* ========== 页面通用样式 ========== */
+        .page {
+            display: none;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+        
+        .page.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* ========== 头部导航 ========== */
+        .header {
+            background: var(--primary);
+            color: white;
+            padding: 14px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-title {
+            font-size: 17px;
+            font-weight: 500;
+            text-align: center;
+        }
+        
+        .header-back {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+            opacity: 0.9;
+        }
+        
+        .header-back:active {
+            opacity: 0.7;
+        }
+        
+        .header-action {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        /* ========== 内容区域 ========== */
+        .content {
+            padding: 16px;
+        }
+        
+        .section {
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 16px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+        
+        /* ========== 底部导航栏 ========== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 750px;
+            background: white;
+            border-top: 1px solid var(--border);
+            display: flex;
+            padding: 6px 0;
+            padding-bottom: calc(6px + var(--safe-bottom));
+            z-index: 100;
+        }
+        
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            padding: 6px 4px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        
+        .nav-item.active {
+            color: var(--primary);
+        }
+        
+        .nav-item:not(.active) {
+            color: var(--text-light);
+        }
+        
+        .nav-icon {
+            font-size: 20px;
+            line-height: 1;
+        }
+        
+        .nav-text {
+            font-size: 10px;
+        }
+        
+        .nav-badge {
+            position: absolute;
+            top: 4px;
+            right: calc(50% - 12px);
+            background: #EF5350;
+            color: white;
+            font-size: 9px;
+            min-width: 14px;
+            height: 14px;
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+        }
+        
+        /* ========== 首页样式 ========== */
+        .hero-section {
+            background: var(--primary);
+            color: white;
+            padding: 28px 20px;
+            margin-bottom: 16px;
+        }
+        
+        .hero-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            letter-spacing: 1px;
+        }
+        
+        .hero-subtitle {
+            font-size: 13px;
+            opacity: 0.85;
+            margin-bottom: 20px;
+        }
+        
+        .hero-features {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+        
+        .hero-feature {
+            text-align: center;
+        }
+        
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            margin: 0 auto 6px;
+        }
+        
+        .feature-label {
+            font-size: 11px;
+            opacity: 0.9;
+        }
+        
+        /* Banner轮播 */
+        .banner-section {
+            padding: 0 16px;
+            margin-bottom: 16px;
+        }
+        
+        .banner-swiper {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            padding-bottom: 4px;
+        }
+        
+        .banner-swiper::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .banner-card {
+            min-width: 85%;
+            height: 100px;
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            scroll-snap-align: start;
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            color: var(--text-dark);
+        }
+        
+        .banner-card:nth-child(2) {
+            background: var(--bg-white);
+        }
+        
+        .banner-card:nth-child(3) {
+            background: var(--bg-white);
+        }
+        
+        .banner-content h3 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .banner-content p {
+            font-size: 12px;
+            color: var(--text-gray);
+        }
+        
+        .banner-tag {
+            display: inline-block;
+            background: var(--bg-light-green);
+            color: var(--primary-dark);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            margin-bottom: 6px;
+        }
+        
+        /* 功能入口卡片 */
+        .function-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        
+        .function-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: box-shadow 0.2s;
+        }
+        
+        .function-card:active {
+            box-shadow: var(--shadow);
+        }
+        
+        .function-icon {
+            font-size: 22px;
+            margin-bottom: 6px;
+        }
+        
+        .function-name {
+            font-size: 11px;
+            color: var(--text-gray);
+        }
+        
+        /* 快捷入口 */
+        .quick-entry {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+        
+        .quick-item {
+            min-width: 90px;
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+        }
+        
+        .quick-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+        
+        .quick-text {
+            font-size: 11px;
+            color: var(--text-gray);
+        }
+        
+        /* ========== 登录注册页 ========== */
+        .auth-container {
+            min-height: 100vh;
+            background: var(--primary);
+            padding: 50px 24px 40px;
+        }
+        
+        .auth-logo {
+            text-align: center;
+            color: white;
+            margin-bottom: 32px;
+        }
+        
+        .auth-logo h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        
+        .auth-logo p {
+            font-size: 13px;
+            opacity: 0.85;
+        }
+        
+        .auth-box {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow);
+        }
+        
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .auth-tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-light);
+            cursor: pointer;
+            position: relative;
+            transition: color 0.2s;
+        }
+        
+        .auth-tab.active {
+            color: var(--primary);
+        }
+        
+        .auth-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary);
+        }
+        
+        .form-group {
+            margin-bottom: 14px;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 13px;
+            color: var(--text-gray);
+            margin-bottom: 6px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .input-group .form-input {
+            flex: 1;
+        }
+        
+        .btn-code {
+            padding: 11px 14px;
+            background: var(--bg-light-green);
+            color: var(--primary);
+            border: none;
+            border-radius: var(--radius);
+            font-size: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        
+        .btn-code:disabled {
+            background: var(--bg-gray);
+            color: var(--text-light);
+        }
+        
+        .btn-primary {
+            width: 100%;
+            padding: 13px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        
+        .btn-primary:active {
+            opacity: 0.9;
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.6;
+        }
+        
+        .auth-link {
+            text-align: center;
+            margin-top: 14px;
+            font-size: 13px;
+            color: var(--text-gray);
+        }
+        
+        .auth-link a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        /* ========== 评估问卷页 ========== */
+        .assessment-progress {
+            background: var(--bg-gray);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .progress-bar {
+            flex: 1;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 2px;
+            transition: width 0.3s;
+        }
+        
+        .progress-text {
+            font-size: 12px;
+            color: var(--text-gray);
+            white-space: nowrap;
+        }
+        
+        .question-card {
+            background: white;
+            margin: 16px;
+            border-radius: var(--radius);
+            padding: 18px;
+            box-shadow: var(--shadow);
+        }
+        
+        .question-number {
+            font-size: 11px;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+        
+        .question-title {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 18px;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+        
+        .option-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .option-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 14px;
+            background: var(--bg-gray);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: background 0.2s;
+            border: 1px solid transparent;
+        }
+        
+        .option-item:active {
+            background: var(--border);
+        }
+        
+        .option-item.selected {
+            background: var(--bg-light-green);
+            border-color: var(--primary);
+        }
+        
+        .option-radio {
+            width: 18px;
+            height: 18px;
+            border: 1.5px solid var(--border);
+            border-radius: 50%;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .option-item.selected .option-radio {
+            border-color: var(--primary);
+            background: var(--primary);
+        }
+        
+        .option-item.selected .option-radio::after {
+            content: '';
+            width: 7px;
+            height: 7px;
+            background: white;
+            border-radius: 50%;
+        }
+        
+        .option-text {
+            font-size: 13px;
+            color: var(--text-dark);
+        }
+        
+        .scale-options {
+            display: flex;
+            justify-content: space-between;
+            gap: 6px;
+        }
+        
+        .scale-option {
+            flex: 1;
+            text-align: center;
+            padding: 10px 2px;
+            background: var(--bg-gray);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+        
+        .scale-option:active {
+            background: var(--border);
+        }
+        
+        .scale-option.selected {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .scale-value {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        
+        .scale-label {
+            font-size: 9px;
+            color: var(--text-light);
+        }
+        
+        .scale-option.selected .scale-label {
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .checkbox-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: var(--bg-gray);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: background 0.2s;
+            border: 1px solid transparent;
+        }
+        
+        .checkbox-item:active {
+            background: var(--border);
+        }
+        
+        .checkbox-item.selected {
+            background: var(--bg-light-green);
+            border-color: var(--primary);
+        }
+        
+        .checkbox-box {
+            width: 18px;
+            height: 18px;
+            border: 1.5px solid var(--border);
+            border-radius: 4px;
+            margin-right: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .checkbox-item.selected .checkbox-box {
+            border-color: var(--primary);
+            background: var(--primary);
+        }
+        
+        .checkbox-box::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C/svg%3E") center/contain no-repeat;
+            display: none;
+        }
+        
+        .checkbox-item.selected .checkbox-box::after {
+            display: block;
+        }
+        
+        .btn-area {
+            padding: 16px 20px;
+            background: white;
+            position: sticky;
+            bottom: 70px;
+            display: flex;
+            gap: 12px;
+        }
+        
+        .btn-secondary {
+            flex: 1;
+            padding: 14px;
+            background: var(--bg-gray);
+            color: var(--text-gray);
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .btn-next {
+            flex: 2;
+        }
+        
+        /* ========== 评估报告页 ========== */
+        .report-header {
+            background: var(--primary);
+            color: white;
+            padding: 24px 20px;
+            text-align: center;
+        }
+        
+        .report-score {
+            font-size: 42px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .report-level {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .report-summary {
+            background: white;
+            margin: -16px 16px 16px;
+            border-radius: var(--radius);
+            padding: 18px;
+            box-shadow: var(--shadow);
+        }
+        
+        .summary-text {
+            font-size: 13px;
+            color: var(--text-gray);
+            line-height: 1.8;
+            margin-bottom: 14px;
+        }
+        
+        .chart-container {
+            height: 250px;
+            margin-top: 14px;
+        }
+        
+        .report-section {
+            background: white;
+            margin: 16px;
+            border-radius: var(--radius);
+            padding: 18px;
+            box-shadow: var(--shadow);
+        }
+        
+        .recommend-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .recommend-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: var(--bg-gray);
+            border-radius: var(--radius);
+            cursor: pointer;
+        }
+        
+        .recommend-item:active {
+            background: var(--border);
+        }
+        
+        .recommend-img {
+            width: 50px;
+            height: 50px;
+            background: var(--bg-light-green);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-right: 12px;
+        }
+        
+        .recommend-info {
+            flex: 1;
+        }
+        
+        .recommend-title {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .recommend-desc {
+            font-size: 12px;
+            color: var(--text-gray);
+        }
+        
+        .recommend-tag {
+            font-size: 10px;
+            color: var(--primary);
+            background: var(--bg-light-green);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 14px;
+        }
+        
+        .btn-outline {
+            flex: 1;
+            padding: 11px;
+            background: white;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            border-radius: var(--radius);
+            font-size: 13px;
+            cursor: pointer;
+        }
+        
+        .btn-outline:active {
+            background: var(--bg-light-green);
+        }
+        
+        .btn-filled {
+            flex: 1;
+            padding: 11px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 13px;
+            cursor: pointer;
+        }
+        
+        .btn-filled:active {
+            opacity: 0.9;
+        }
+        
+        /* ========== 课程中心页 ========== */
+        .category-tabs {
+            display: flex;
+            gap: 8px;
+            padding: 14px 16px;
+            overflow-x: auto;
+            background: white;
+        }
+        
+        .category-tab {
+            padding: 7px 14px;
+            background: var(--bg-gray);
+            border-radius: 16px;
+            font-size: 12px;
+            color: var(--text-gray);
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .category-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            padding: 0 16px;
+        }
+        
+        .course-card {
+            background: white;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+        }
+        
+        .course-card:active {
+            opacity: 0.9;
+        }
+        
+        .course-cover {
+            height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: white;
+            background: var(--primary);
+        }
+        
+        .course-cover.relax { background: #66BB6A; }
+        .course-cover.lumbar { background: #81C784; }
+        .course-cover.scalp { background: #AED581; }
+        .course-cover.sleep { background: #4DB6AC; }
+        .course-cover.rhythm { background: #4FC3F7; }
+        
+        .course-info {
+            padding: 12px;
+        }
+        
+        .course-title {
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .course-meta {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: var(--text-light);
+        }
+        
+        .course-tag {
+            background: var(--bg-light-green);
+            color: var(--primary-dark);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+        }
+        
+        /* 课程详情页 */
+        .course-detail-cover {
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 56px;
+            color: white;
+            background: var(--primary);
+        }
+        
+        .course-detail-info {
+            padding: 18px;
+            background: white;
+        }
+        
+        .course-detail-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .course-detail-meta {
+            display: flex;
+            gap: 14px;
+            font-size: 12px;
+            color: var(--text-gray);
+            margin-bottom: 14px;
+        }
+        
+        .course-detail-desc {
+            font-size: 13px;
+            color: var(--text-gray);
+            line-height: 1.8;
+            margin-bottom: 18px;
+        }
+        
+        .course-steps {
+            margin-top: 14px;
+        }
+        
+        .step-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        
+        .step-num {
+            width: 26px;
+            height: 26px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .step-desc {
+            font-size: 13px;
+            color: var(--text-gray);
+        }
+        
+        .course-action {
+            position: fixed;
+            bottom: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 750px;
+            padding: 12px 16px;
+            background: white;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+        }
+        
+        .btn-start-course {
+            flex: 1;
+            padding: 14px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        /* ========== 打卡中心页 ========== */
+        .checkin-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            padding: 14px 16px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 14px;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+        
+        .stat-value {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 2px;
+        }
+        
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-gray);
+        }
+        
+        .calendar-container {
+            background: white;
+            margin: 0 16px;
+            border-radius: var(--radius);
+            padding: 16px;
+            box-shadow: var(--shadow);
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .calendar-title {
+            font-size: 15px;
+            font-weight: 600;
+        }
+        
+        .calendar-nav {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .calendar-nav button {
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: var(--bg-gray);
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .calendar-week {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            margin-bottom: 8px;
+        }
+        
+        .calendar-week span {
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-light);
+            padding: 4px;
+        }
+        
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+        
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        
+        .calendar-day.empty {
+            cursor: default;
+        }
+        
+        .calendar-day.today {
+            background: var(--bg-light-green);
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .calendar-day.checked {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .calendar-day.future {
+            color: var(--text-light);
+        }
+        
+        .checkin-types {
+            padding: 16px;
+        }
+        
+        .checkin-type-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .checkin-type-item {
+            background: white;
+            border-radius: var(--radius);
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s;
+        }
+        
+        .checkin-type-item:active {
+            transform: scale(0.96);
+        }
+        
+        .checkin-type-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        
+        .checkin-type-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .checkin-type-desc {
+            font-size: 12px;
+            color: var(--text-gray);
+        }
+        
+        .checkin-type-item.checked {
+            background: var(--bg-light-green);
+            border: 2px solid var(--primary);
+        }
+        
+        .checkin-type-item.checked .checkin-type-name {
+            color: var(--primary);
+        }
+        
+        .trend-chart {
+            height: 200px;
+            margin: 16px;
+            background: white;
+            border-radius: var(--radius);
+            padding: 16px;
+            box-shadow: var(--shadow);
+        }
+        
+        /* ========== 个人中心页 ========== */
+        .profile-header {
+            background: var(--primary);
+            color: white;
+            padding: 28px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .profile-avatar {
+            width: 64px;
+            height: 64px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+        
+        .profile-info {
+            flex: 1;
+        }
+        
+        .profile-name {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .profile-vip {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: var(--primary);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            color: white;
+            font-weight: 500;
+        }
+        
+        .profile-menu {
+            background: white;
+            margin: 16px;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+        
+        .menu-item:active {
+            background: var(--bg-gray);
+        }
+        
+        .menu-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--bg-light-green);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            margin-right: 12px;
+        }
+        
+        .menu-text {
+            flex: 1;
+            font-size: 15px;
+        }
+        
+        .menu-arrow {
+            color: var(--text-light);
+        }
+        
+        .menu-badge {
+            background: #FF5252;
+            color: white;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 8px;
+        }
+        
+        /* ========== 线下预约页 ========== */
+        .location-filter {
+            display: flex;
+            gap: 8px;
+            padding: 16px;
+            overflow-x: auto;
+        }
+        
+        .location-tab {
+            padding: 8px 16px;
+            background: var(--bg-gray);
+            border-radius: 20px;
+            font-size: 13px;
+            color: var(--text-gray);
+            white-space: nowrap;
+            cursor: pointer;
+        }
+        
+        .location-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .location-list {
+            padding: 0 16px;
+        }
+        
+        .location-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: var(--shadow);
+        }
+        
+        .location-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        
+        .location-name {
+            font-size: 15px;
+            font-weight: 600;
+        }
+        
+        .location-badge {
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: var(--bg-light-green);
+            color: var(--primary);
+        }
+        
+        .location-details {
+            font-size: 13px;
+            color: var(--text-gray);
+            line-height: 1.8;
+        }
+        
+        .location-service {
+            display: inline-block;
+            background: var(--bg-gray);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-right: 8px;
+            margin-top: 8px;
+        }
+        
+        .location-slots {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .slot-info {
+            font-size: 12px;
+            color: var(--text-gray);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .btn-book {
+            margin-top: 12px;
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .booking-form {
+            background: white;
+            margin: 16px;
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .booking-success {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--bg-light-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: var(--primary);
+            margin: 0 auto 20px;
+        }
+        
+        .booking-code {
+            background: var(--bg-gray);
+            padding: 16px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .booking-code-label {
+            font-size: 12px;
+            color: var(--text-gray);
+            margin-bottom: 8px;
+        }
+        
+        .booking-code-value {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            color: var(--primary);
+        }
+        
+        /* ========== 健康商城页 ========== */
+        .shop-header {
+            display: flex;
+            padding: 12px 16px;
+            background: white;
+            gap: 12px;
+        }
+        
+        .shop-search {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            background: var(--bg-gray);
+            border-radius: 20px;
+            padding: 8px 16px;
+        }
+        
+        .shop-search input {
+            border: none;
+            background: transparent;
+            outline: none;
+            flex: 1;
+            font-size: 14px;
+        }
+        
+        .shop-cart {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            background: var(--bg-light-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 18px;
+            height: 18px;
+            background: #FF5252;
+            color: white;
+            font-size: 11px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .shop-banners {
+            display: flex;
+            gap: 12px;
+            padding: 16px;
+            overflow-x: auto;
+        }
+        
+        .shop-banner {
+            min-width: 280px;
+            height: 90px;
+            background: var(--primary);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            color: white;
+        }
+        
+        .shop-banner:nth-child(2) {
+            background: var(--primary-light);
+        }
+        
+        .banner-text h4 {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .banner-text p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            padding: 0 16px;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        
+        .product-img {
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            background: var(--bg-gray);
+        }
+        
+        .product-info {
+            padding: 12px;
+        }
+        
+        .product-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .product-price {
+            color: #FF5252;
+            font-size: 16px;
+            font-weight: 700;
+        }
+        
+        .product-price::before {
+            content: '¥';
+            font-size: 12px;
+        }
+        
+        .product-sales {
+            font-size: 11px;
+            color: var(--text-light);
+            margin-left: 8px;
+        }
+        
+        .product-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .btn-add-cart {
+            flex: 1;
+            padding: 8px;
+            background: var(--bg-light-green);
+            color: var(--primary);
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+        .btn-buy-now {
+            flex: 1;
+            padding: 8px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+        /* ========== 订单会员页 ========== */
+        .order-tabs {
+            display: flex;
+            background: white;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .order-tab {
+            flex: 1;
+            padding: 14px;
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-gray);
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .order-tab.active {
+            color: var(--primary);
+        }
+        
+        .order-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary);
+        }
+        
+        .order-list {
+            padding: 16px;
+        }
+        
+        .order-card {
+            background: white;
+            border-radius: var(--radius);
+            margin-bottom: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+            color: var(--text-gray);
+        }
+        
+        .order-status {
+            color: var(--primary);
+        }
+        
+        .order-body {
+            padding: 12px 16px;
+            display: flex;
+            gap: 12px;
+        }
+        
+        .order-img {
+            width: 70px;
+            height: 70px;
+            background: var(--bg-gray);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+        
+        .order-info {
+            flex: 1;
+        }
+        
+        .order-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        
+        .order-spec {
+            font-size: 12px;
+            color: var(--text-gray);
+        }
+        
+        .order-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .order-price {
+            font-size: 15px;
+            color: #FF5252;
+            font-weight: 600;
+        }
+        
+        .btn-order-action {
+            padding: 6px 16px;
+            border: 1px solid var(--border);
+            background: white;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        
+        .vip-banner {
+            background: #424242;
+            margin: 16px;
+            border-radius: var(--radius);
+            padding: 20px;
+            color: white;
+            text-align: center;
+        }
+        
+        .vip-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .vip-subtitle {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-bottom: 14px;
+        }
+        
+        .vip-plans {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .vip-plan {
+            background: rgba(255,255,255,0.08);
+            border-radius: var(--radius);
+            padding: 14px;
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .vip-plan.popular {
+            border-color: var(--primary);
+        }
+        
+        .vip-plan-name {
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+        
+        .vip-plan-price {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .vip-plan-unit {
+            font-size: 11px;
+            opacity: 0.8;
+        }
+        
+        .vip-plan-origin {
+            font-size: 11px;
+            color: var(--text-light);
+            text-decoration: line-through;
+            margin-top: 2px;
+        }
+        
+        .vip-features {
+            padding: 16px;
+        }
+        
+        .vip-feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0;
+            font-size: 14px;
+        }
+        
+        .vip-feature-icon {
+            color: var(--primary);
+        }
+        
+        /* ========== 活动报名页 ========== */
+        .activity-list {
+            padding: 16px;
+        }
+        
+        .activity-card {
+            background: white;
+            border-radius: var(--radius);
+            margin-bottom: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        
+        .activity-cover {
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: white;
+            background: var(--primary);
+        }
+        
+        .activity-cover.health { background: #66BB6A; }
+        .activity-cover.stress { background: #81C784; }
+        .activity-cover.enterprise { background: #4FC3F7; }
+        
+        .activity-content {
+            padding: 14px;
+        }
+        
+        .activity-title {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .activity-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 12px;
+            color: var(--text-gray);
+            margin-bottom: 10px;
+        }
+        
+        .activity-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .activity-progress {
+            margin-bottom: 12px;
+        }
+        
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-gray);
+            margin-bottom: 6px;
+        }
+        
+        .activity-bar {
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .activity-bar-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 3px;
+        }
+        
+        .btn-signup {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .btn-signup:disabled {
+            background: var(--text-light);
+        }
+        
+        /* ========== 弹窗组件 ========== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        
+        .modal-overlay.show {
+            display: flex;
+        }
+        
+        .modal {
+            background: white;
+            border-radius: var(--radius);
+            width: 100%;
+            max-width: 340px;
+            overflow: hidden;
+            animation: modalIn 0.3s ease;
+        }
+        
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .modal-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .modal-title {
+            font-size: 17px;
+            font-weight: 600;
+        }
+        
+        .modal-body {
+            padding: 24px 20px;
+            text-align: center;
+        }
+        
+        .modal-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        
+        .modal-text {
+            font-size: 15px;
+            color: var(--text-gray);
+            line-height: 1.6;
+        }
+        
+        .modal-footer {
+            padding: 16px 20px;
+            display: flex;
+            gap: 12px;
+        }
+        
+        .modal-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .modal-btn-cancel {
+            background: var(--bg-gray);
+            color: var(--text-gray);
+        }
+        
+        .modal-btn-confirm {
+            background: var(--primary);
+            color: white;
+        }
+        
+        /* Toast提示 */
+        .toast {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 14px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 2000;
+            animation: toastIn 0.3s ease;
+            pointer-events: none;
+        }
+        
+        @keyframes toastIn {
+            from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+        
+        /* ========== 空状态 ========== */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+        
+        .empty-text {
+            font-size: 15px;
+            color: var(--text-gray);
+        }
+        
+        /* ========== 响应式适配 ========== */
+        @media (min-width: 768px) {
+            .hero-features {
+                grid-template-columns: repeat(4, 1fr);
+                max-width: 400px;
+                margin: 0 auto;
+            }
+            
+            .function-grid {
+                grid-template-columns: repeat(4, 1fr);
+                max-width: 500px;
+                margin: 0 auto;
+            }
+            
+            .course-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .product-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .checkin-type-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .banner-swiper {
+                justify-content: center;
+            }
+            
+            .banner-card {
+                min-width: 60%;
+            }
+        }
+        
+        /* ========== AI头皮检测页样式 ========== */
+        .ai-detection-container {
+            padding: 16px;
+        }
+        
+        .upload-area {
+            background: white;
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 16px;
+        }
+        
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: var(--bg-light-green);
+        }
+        
+        .upload-area.dragover {
+            border-color: var(--primary);
+            background: var(--bg-light-green);
+        }
+        
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+            color: var(--text-light);
+        }
+        
+        .upload-text {
+            font-size: 14px;
+            color: var(--text-gray);
+            margin-bottom: 8px;
+        }
+        
+        .upload-hint {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+        
+        .preview-area {
+            background: white;
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+        }
+        
+        .preview-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .preview-image {
+            width: 100%;
+            max-height: 250px;
+            object-fit: cover;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .preview-image.show {
+            display: block;
+        }
+        
+        .preview-placeholder {
+            height: 150px;
+            background: var(--bg-gray);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+        }
+        
+        .preview-placeholder.hidden {
+            display: none;
+        }
+        
+        .symptom-input {
+            background: white;
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+        }
+        
+        .symptom-textarea {
+            width: 100%;
+            min-height: 100px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 14px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        
+        .symptom-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .detection-result {
+            background: white;
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+        }
+        
+        .result-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .result-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--bg-light-green);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .result-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .result-subtitle {
+            font-size: 12px;
+            color: var(--text-gray);
+        }
+        
+        .condition-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .condition-item {
+            background: var(--bg-gray);
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .condition-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+        
+        .condition-label {
+            font-size: 12px;
+            color: var(--text-gray);
+        }
+        
+        .analysis-text {
+            background: var(--bg-light-green);
+            border-radius: 8px;
+            padding: 14px;
+            font-size: 14px;
+            color: var(--text-dark);
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+        
+        .acupoint-section {
+            margin-top: 16px;
+        }
+        
+        .acupoint-card {
+            background: white;
+            border-radius: var(--radius);
+            margin-bottom: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        
+        .acupoint-header {
+            background: var(--primary);
+            color: white;
+            padding: 18px;
+            text-align: center;
+        }
+        
+        .acupoint-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .acupoint-desc {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+        
+        .acupoint-diagram {
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .diagram-svg {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        .acupoint-list {
+            padding: 16px;
+        }
+        
+        .acupoint-item {
+            display: flex;
+            gap: 12px;
+            padding: 14px;
+            background: var(--bg-gray);
+            border-radius: 10px;
+            margin-bottom: 12px;
+        }
+        
+        .acupoint-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .acupoint-num {
+            width: 28px;
+            height: 28px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .acupoint-info {
+            flex: 1;
+        }
+        
+        .acupoint-name {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .acupoint-location {
+            font-size: 12px;
+            color: var(--text-gray);
+            margin-bottom: 6px;
+        }
+        
+        .acupoint-method {
+            font-size: 13px;
+            color: var(--primary-dark);
+            background: var(--bg-light-green);
+            padding: 6px 10px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+        
+        .acupoint-duration {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-left: 10px;
+        }
+        
+        .btn-detect {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-detect:active {
+            opacity: 0.9;
+        }
+        
+        .btn-detect:disabled {
+            opacity: 0.6;
+        }
+        
+        .btn-detect .loading-icon {
+            display: none;
+        }
+        
+        .btn-detect.loading .loading-icon {
+            display: inline-block;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .disclaimer {
+            background: #FFF8E1;
+            border: 1px solid #FFE082;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 16px;
+            font-size: 12px;
+            color: #F57C00;
+            text-align: center;
+        }
+        
+        .disclaimer-icon {
+            margin-right: 6px;
+        }
+        
+        /* ========== 隐藏类 ========== */
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- ========== 首页 ========== -->
+        <div id="page-home" class="page active">
+            <div class="hero-section">
+                <h1 class="hero-title">青岐复元</h1>
+                <p class="hero-subtitle">头颈一体中医快干预 · 守护久坐青年</p>
+                <div class="hero-features">
+                    <div class="hero-feature">
+                        <div class="feature-icon">📊</div>
+                        <div class="feature-label">健康评估</div>
+                    </div>
+                    <div class="hero-feature">
+                        <div class="feature-icon">🎥</div>
+                        <div class="feature-label">干预课程</div>
+                    </div>
+                    <div class="hero-feature">
+                        <div class="feature-icon">✅</div>
+                        <div class="feature-label">每日打卡</div>
+                    </div>
+                    <div class="hero-feature">
+                        <div class="feature-icon">📍</div>
+                        <div class="feature-label">线下体验</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Banner轮播 -->
+            <div class="banner-section">
+                <div class="banner-swiper">
+                    <div class="banner-card">
+                        <div class="banner-content">
+                            <span class="banner-tag">限时活动</span>
+                            <h3>春季健康周</h3>
+                            <p>亚健康状态全面评估</p>
+                        </div>
+                    </div>
+                    <div class="banner-card">
+                        <div class="banner-content">
+                            <span class="banner-tag">新课程上线</span>
+                            <h3>颈椎舒缓系列</h3>
+                            <p>10分钟快速放松</p>
+                        </div>
+                    </div>
+                    <div class="banner-card">
+                        <div class="banner-content">
+                            <span class="banner-tag">会员专享</span>
+                            <h3>企业健康日</h3>
+                            <p>团队亚健康干预</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content">
+                <!-- AI头皮检测入口 -->
+                <div class="section">
+                    <div class="section-title">AI智能服务</div>
+                    <div class="function-grid" style="grid-template-columns: repeat(2, 1fr);">
+                        <div class="function-card" onclick="router.navigate('ai-scalp')" style="background: var(--bg-light-green); border-color: var(--primary);">
+                            <div class="function-icon" style="font-size: 24px;">AI</div>
+                            <div class="function-name" style="color: var(--primary-dark);">AI头皮检测</div>
+                        </div>
+                        <div class="function-card" onclick="router.navigate('courses')">
+                            <div class="function-icon">课程</div>
+                            <div class="function-name">干预课程</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 功能入口 -->
+                <div class="section">
+                    <div class="section-title">核心功能</div>
+                    <div class="function-grid">
+                        <div class="function-card" onclick="router.navigate('assessment')">
+                            <div class="function-icon">🔍</div>
+                            <div class="function-name">健康评估</div>
+                        </div>
+                        <div class="function-card" onclick="router.navigate('courses')">
+                            <div class="function-icon">🎬</div>
+                            <div class="function-name">干预课程</div>
+                        </div>
+                        <div class="function-card" onclick="router.navigate('checkin')">
+                            <div class="function-icon">📅</div>
+                            <div class="function-name">每日打卡</div>
+                        </div>
+                        <div class="function-card" onclick="router.navigate('booking')">
+                            <div class="function-icon">📍</div>
+                            <div class="function-name">线下预约</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 快捷入口 -->
+                <div class="section">
+                    <div class="section-title">快捷服务</div>
+                    <div class="quick-entry">
+                        <div class="quick-item" onclick="router.navigate('shop')">
+                            <div class="quick-icon">🛒</div>
+                            <div class="quick-text">健康商城</div>
+                        </div>
+                        <div class="quick-item" onclick="router.navigate('activities')">
+                            <div class="quick-icon">🎯</div>
+                            <div class="quick-text">活动报名</div>
+                        </div>
+                        <div class="quick-item" onclick="router.navigate('vip')">
+                            <div class="quick-icon">👑</div>
+                            <div class="quick-text">开通会员</div>
+                        </div>
+                        <div class="quick-item" onclick="router.navigate('profile')">
+                            <div class="quick-icon">📋</div>
+                            <div class="quick-text">健康档案</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 推荐课程 -->
+                <div class="section">
+                    <div class="section-title">热门课程</div>
+                    <div class="course-grid" style="grid-template-columns: repeat(2, 1fr);">
+                        <div class="course-card" onclick="router.navigate('course-detail', {id: 1})">
+                            <div class="course-cover relax">🧘</div>
+                            <div class="course-info">
+                                <div class="course-title">颈肩深度放松术</div>
+                                <div class="course-meta">
+                                    <span>15分钟</span>
+                                    <span class="course-tag">颈肩放松</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="course-card" onclick="router.navigate('course-detail', {id: 2})">
+                            <div class="course-cover sleep">😴</div>
+                            <div class="course-info">
+                                <div class="course-title">睡眠改善呼吸法</div>
+                                <div class="course-meta">
+                                    <span>20分钟</span>
+                                    <span class="course-tag">睡眠改善</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 底部提示 -->
+            <div style="text-align: center; padding: 20px; font-size: 12px; color: var(--text-light);">
+                本平台为健康促进服务，不替代医疗机构诊疗
+            </div>
+            
+            <!-- 底部导航 -->
+            <div class="bottom-nav">
+                <div class="nav-item active" onclick="router.navigate('home')">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-text">首页</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('courses')">
+                    <span class="nav-icon">🎬</span>
+                    <span class="nav-text">课程</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('checkin')">
+                    <span class="nav-icon">📅</span>
+                    <span class="nav-text">打卡</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('shop')">
+                    <span class="nav-icon">🛒</span>
+                    <span class="nav-text">商城</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('profile')">
+                    <span class="nav-icon">👤</span>
+                    <span class="nav-text">我的</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ========== 登录注册页 ========== -->
+        <div id="page-auth" class="page">
+            <div class="auth-container">
+                <div class="auth-logo">
+                    <h1>青岐复元</h1>
+                    <p>头颈一体中医快干预平台</p>
+                </div>
+                <div class="auth-box">
+                    <div class="auth-tabs">
+                        <div class="auth-tab active" data-tab="login" onclick="switchAuthTab('login')">登录</div>
+                        <div class="auth-tab" data-tab="register" onclick="switchAuthTab('register')">注册</div>
+                    </div>
+                    
+                    <!-- 登录表单 -->
+                    <div id="auth-login">
+                        <div class="form-group">
+                            <label class="form-label">手机号</label>
+                            <input type="tel" class="form-input" id="login-phone" placeholder="请输入手机号" maxlength="11">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">验证码</label>
+                            <div class="input-group">
+                                <input type="text" class="form-input" id="login-code" placeholder="请输入验证码" maxlength="6">
+                                <button class="btn-code" id="login-code-btn" onclick="sendCode('login')">获取验证码</button>
+                            </div>
+                        </div>
+                        <button class="btn-primary" onclick="handleLogin()">登录</button>
+                        <div class="auth-link">
+                            <a href="javascript:;" onclick="switchAuthTab('forget')">忘记密码？</a>
+                        </div>
+                    </div>
+                    
+                    <!-- 注册表单 -->
+                    <div id="auth-register" class="hidden">
+                        <div class="form-group">
+                            <label class="form-label">手机号</label>
+                            <input type="tel" class="form-input" id="reg-phone" placeholder="请输入手机号" maxlength="11">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">验证码</label>
+                            <div class="input-group">
+                                <input type="text" class="form-input" id="reg-code" placeholder="请输入验证码" maxlength="6">
+                                <button class="btn-code" id="reg-code-btn" onclick="sendCode('register')">获取验证码</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">设置密码</label>
+                            <input type="password" class="form-input" id="reg-password" placeholder="请设置登录密码">
+                        </div>
+                        <button class="btn-primary" onclick="handleRegister()">注册</button>
+                        <div class="auth-link">
+                            已有账号？<a href="javascript:;" onclick="switchAuthTab('login')">立即登录</a>
+                        </div>
+                    </div>
+                    
+                    <!-- 忘记密码表单 -->
+                    <div id="auth-forget" class="hidden">
+                        <div class="form-group">
+                            <label class="form-label">手机号</label>
+                            <input type="tel" class="form-input" id="forget-phone" placeholder="请输入手机号" maxlength="11">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">验证码</label>
+                            <div class="input-group">
+                                <input type="text" class="form-input" id="forget-code" placeholder="请输入验证码" maxlength="6">
+                                <button class="btn-code" id="forget-code-btn" onclick="sendCode('forget')">获取验证码</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">新密码</label>
+                            <input type="password" class="form-input" id="forget-password" placeholder="请输入新密码">
+                        </div>
+                        <button class="btn-primary" onclick="handleForget()">重置密码</button>
+                        <div class="auth-link">
+                            <a href="javascript:;" onclick="switchAuthTab('login')">返回登录</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ========== 亚健康评估页 ========== -->
+        <div id="page-assessment" class="page">
+            <div class="header">
+                <div class="header-back" onclick="router.navigate('home')">←</div>
+                <div class="header-title">亚健康状态评估</div>
+            </div>
+            
+            <div class="assessment-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="assessment-progress" style="width: 0%"></div>
+                </div>
+                <div class="progress-text"><span id="current-q">1</span>/<span id="total-q">6</span></div>
+            </div>
+            
+            <div id="assessment-questions">
+                <!-- 问题会动态渲染 -->
+            </div>
+            
+            <div class="btn-area">
+                <button class="btn-secondary" id="prev-btn" onclick="prevQuestion()" style="display: none;">上一题</button>
+                <button class="btn-primary btn-next" id="next-btn" onclick="nextQuestion()">下一题</button>
+            </div>
+        </div>
+        
+        <!-- ========== 评估报告页 ========== -->
+        <div id="page-report" class="page">
+            <div class="header">
+                <div class="header-back" onclick="router.navigate('home')">←</div>
+                <div class="header-title">评估报告</div>
+            </div>
+            
+            <div class="report-header">
+                <div class="report-score" id="report-score">72</div>
+                <div class="report-level" id="report-level">轻度亚健康</div>
+            </div>
+            
+            <div class="report-summary">
+                <div class="summary-text" id="report-summary">
+                    您的整体状态良好，处于轻度亚健康范围。主要问题集中在颈肩部位和睡眠质量，建议通过日常干预和规律作息来改善。
+                </div>
+                <div class="chart-container" id="radar-chart"></div>
+            </div>
+            
+            <div class="report-section">
+                <div class="section-title">推荐干预方案</div>
+                <div class="recommend-list" id="recommend-courses">
+                    <!-- 动态渲染 -->
+                </div>
+            </div>
+            
+            <div style="padding: 16px;">
+                <div class="btn-row">
+                    <button class="btn-outline" onclick="showToast('报告已保存')">💾 保存报告</button>
+                    <button class="btn-filled" onclick="showToast('分享链接已复制')">📤 分享报告</button>
+                </div>
+            </div>
+            
+            <div class="bottom-nav">
+                <div class="nav-item" onclick="router.navigate('home')">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-text">首页</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('courses')">
+                    <span class="nav-icon">🎬</span>
+                    <span class="nav-text">课程</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('checkin')">
+                    <span class="nav-icon">📅</span>
+                    <span class="nav-text">打卡</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('shop')">
+                    <span class="nav-icon">🛒</span>
+                    <span class="nav-text">商城</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('profile')">
+                    <span class="nav-icon">👤</span>
+                    <span class="nav-text">我的</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ========== 课程中心页 ========== -->
+        <div id="page-courses" class="page">
+            <div class="header">
+                <div class="header-title">课程中心</div>
+            </div>
+            
+            <div class="category-tabs" id="category-tabs">
+                <div class="category-tab active" data-category="all" onclick="filterCourses('all')">全部</div>
+                <div class="category-tab" data-category="neck" onclick="filterCourses('neck')">颈肩放松</div>
+                <div class="category-tab" data-category="lumbar" onclick="filterCourses('lumbar')">腰部舒缓</div>
+                <div class="category-tab" data-category="scalp" onclick="filterCourses('scalp')">头皮舒缓</div>
+                <div class="category-tab" data-category="sleep" onclick="filterCourses('sleep')">睡眠改善</div>
+                <div class="category-tab" data-category="rhythm" onclick="filterCourses('rhythm')">节律恢复</div>
+            </div>
+            
+            <div class="course-grid" id="course-list">
+                <!-- 动态渲染 -->
+            </div>
+            
+            <div class="bottom-nav">
+                <div class="nav-item" onclick="router.navigate('home')">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-text">首页</span>
+                </div>
+                <div class="nav-item active" onclick="router.navigate('courses')">
+                    <span class="nav-icon">🎬</span>
+                    <span class="nav-text">课程</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('checkin')">
+                    <span class="nav-icon">📅</span>
+                    <span class="nav-text">打卡</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('shop')">
+                    <span class="nav-icon">🛒</span>
+                    <span class="nav-text">商城</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('profile')">
+                    <span class="nav-icon">👤</span>
+                    <span class="nav-text">我的</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ========== 课程详情页 ========== -->
+        <div id="page-course-detail" class="page">
+            <div class="header">
+                <div class="header-back" onclick="router.navigate('courses')">←</div>
+                <div class="header-title">课程详情</div>
+            </div>
+            
+            <div id="course-detail-content">
+                <!-- 动态渲染 -->
+            </div>
+            
+            <div class="course-action">
+                <button class="btn-start-course" onclick="showToast('开始学习课程')">开始学习</button>
+            </div>
+        </div>
+        
+        <!-- ========== 打卡中心页 ========== -->
+        <div id="page-checkin" class="page">
+            <div class="header">
+                <div class="header-title">打卡中心</div>
+            </div>
+            
+            <div class="checkin-stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="week-count">5</div>
+                    <div class="stat-label">本周打卡</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="month-count">18</div>
+                    <div class="stat-label">本月打卡</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="streak-days">7</div>
+                    <div class="stat-label">连续天数</div>
+                </div>
+            </div>
+            
+            <div class="calendar-container">
+                <div class="calendar-header">
+                    <div class="calendar-title" id="calendar-title">2024年3月</div>
+                    <div class="calendar-nav">
+                        <button onclick="changeMonth(-1)">◀</button>
+                        <button onclick="changeMonth(1)">▶</button>
+                    </div>
+                </div>
+                <div class="calendar-week">
+                    <span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>
+                </div>
+                <div class="calendar-days" id="calendar-days">
+                    <!-- 动态渲染 -->
+                </div>
+            </div>
+            
+            <div class="checkin-types">
+                <div class="section-title">选择打卡类型</div>
+                <div class="checkin-type-grid">
+                    <div class="checkin-type-item" onclick="toggleCheckin(this, 'action')">
+                        <div class="checkin-type-icon">🧘</div>
+                        <div class="checkin-type-name">动作干预</div>
+                        <div class="checkin-type-desc">完成课程练习</div>
+                    </div>
+                    <div class="checkin-type-item" onclick="toggleCheckin(this, 'rest')">
+                        <div class="checkin-type-icon">⏰</div>
+                        <div class="checkin-type-name">定时休息</div>
+                        <div class="checkin-type-desc">每小时起身活动</div>
+                    </div>
+                    <div class="checkin-type-item" onclick="toggleCheckin(this, 'posture')">
+                        <div class="checkin-type-icon">🪑</div>
+                        <div class="checkin-type-name">正确坐姿</div>
+                        <div class="checkin-type-desc">保持良好体态</div>
+                    </div>
+                    <div class="checkin-type-item" onclick="toggleCheckin(this, 'sleep')">
+                        <div class="checkin-type-icon">😴</div>
+                        <div class="checkin-type-name">睡眠打卡</div>
+                        <div class="checkin-type-desc">记录睡眠质量</div>
+                    </div>
+                </div>
+                <button class="btn-primary" style="margin-top: 16px;" onclick="doCheckin()">立即打卡</button>
+            </div>
+            
+            <div class="trend-chart">
+                <div class="section-title">健康趋势</div>
+                <div id="trend-chart" style="height: 160px;"></div>
+            </div>
+            
+            <div class="bottom-nav">
+                <div class="nav-item" onclick="router.navigate('home')">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-text">首页</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('courses')">
+                    <span class="nav-icon">🎬</span>
+                    <span class="nav-text">课程</span>
+                </div>
+                <div class="nav-item active" onclick="router.navigate('checkin')">
+                    <span class="nav-icon">📅</span>
+                    <span class="nav-text">打卡</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('shop')">
+                    <span class="nav-icon">🛒</span>
+                    <span class="nav-text">商城</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('profile')">
+                    <span class="nav-icon">👤</span>
+                    <span class="nav-text">我的</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ========== 个人中心页 ========== -->
+        <div id="page-profile" class="page">
+            <div class="profile-header">
+                <div class="profile-avatar">👤</div>
+                <div class="profile-info">
+                    <div class="profile-name" id="profile-name">小王</div>
+                    <div class="profile-vip" id="profile-vip">🌟 普通会员</div>
+                </div>
+            </div>
+            
+            <div class="profile-menu">
+                <div class="menu-item" onclick="router.navigate('report')">
+                    <div class="menu-icon">📊</div>
+                    <div class="menu-text">我的评估报告</div>
+                    <div class="menu-arrow">›</div>
+                </div>
+                <div class="menu-item" onclick="router.navigate('checkin')">
+                    <div class="menu-icon">✅</div>
+                    <div class="menu-text">打卡记录</div>
+                    <div class="menu-arrow">›</div>
+                </div>
+                <div class="menu-item" onclick="router.navigate('booking')">
+                    <div class="menu-icon">📍</div>
+                    <div class="menu-text">预约记录</div>
+                    <div class="menu-arrow">›</div>
+                </div>
+                <div class="menu-item" onclick="router.navigate('orders')">
+                    <div class="menu-icon">📦</div>
+                    <div class="menu-text">我的订单</div>
+                    <span class="menu-badge">2</span>
+                    <div class="menu-arrow">›</div>
+                </div>
+            </div>
+            
+            <div class="profile-menu">
+                <div class="menu-item">
+                    <div class="menu-icon">🔔</div>
+                    <div class="menu-text">消息中心</div>
+                    <span class="menu-badge">3</span>
+                    <div class="menu-arrow">›</div>
+                </div>
+                <div class="menu-item" onclick="router.navigate('vip')">
+                    <div class="menu-icon">👑</div>
+                    <div class="menu-text">会员中心</div>
+                    <div class="menu-arrow">›</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-icon">📤</div>
+                    <div class="menu-text">数据导出</div>
+                    <div class="menu-arrow">›</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-icon">⚙️</div>
+                    <div class="menu-text">设置</div>
+                    <div class="menu-arrow">›</div>
+                </div>
+            </div>
+            
+            <div class="bottom-nav">
+                <div class="nav-item" onclick="router.navigate('home')">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-text">首页</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('courses')">
+                    <span class="nav-icon">🎬</span>
+                    <span class="nav-text">课程</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('checkin')">
+                    <span class="nav-icon">📅</span>
+                    <span class="nav-text">打卡</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('shop')">
+                    <span class="nav-icon">🛒</span>
+                    <span class="nav-text">商城</span>
+                </div>
+                <div class="nav-item active" onclick="router.navigate('profile')">
+                    <span class="nav-icon">👤</span>
+                    <span class="nav-text">我的</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ========== 线下预约页 ========== -->
+        <div id="page-booking" class="page">
+            <div class="header">
+                <div class="header-back" onclick="router.navigate('home')">←</div>
+                <div class="header-title">线下服务预约</div>
+            </div>
+            
+            <div class="location-filter">
+                <div class="location-tab active" onclick="filterLocation('all')">全部</div>
+                <div class="location-tab" onclick="filterLocation('campus')">高校校区</div>
+                <div class="location-tab" onclick="filterLocation('park')">产业园区</div>
+                <div class="location-tab" onclick="filterLocation('library')">公共图书馆</div>
+            </div>
+            
+            <div class="location-list" id="location-list">
+                <!-- 动态渲染 -->
+            </div>
+            
+            <div class="bottom-nav">
+                <div class="nav-item" onclick="router.navigate('home')">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-text">首页</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('courses')">
+                    <span class="nav-icon">🎬</span>
+                    <span class="nav-text">课程</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('checkin')">
+                    <span class="nav-icon">📅</span>
+                    <span class="nav-text">打卡</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('shop')">
+                    <span class="nav-icon">🛒</span>
+                    <span class="nav-text">商城</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('profile')">
+                    <span class="nav-icon">👤</span>
+                    <span class="nav-text">我的</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ========== 预约表单页 ========== -->
+        <div id="page-booking-form" class="page">
+            <div class="header">
+                <div class="header-back" onclick="router.navigate('booking')">←</div>
+                <div class="header-title">填写预约信息</div>
+            </div>
+            
+            <div class="booking-form">
+                <div class="form-group">
+                    <label class="form-label">服务地点</label>
+                    <input type="text" class="form-input" id="booking-location" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">预约日期</label>
+                    <input type="date" class="form-input" id="booking-date">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">预约时段</label>
+                    <select class="form-input" id="booking-time">
+                        <option value="">请选择时段</option>
+                        <option value="09:00-11:00">09:00-11:00</option>
+                        <option value="14:00-16:00">14:00-16:00</option>
+                        <option value="16:00-18:00">16:00-18:00</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">服务类型</label>
+                    <div class="checkbox-options" style="grid-template-columns: repeat(2, 1fr);">
+                        <div class="checkbox-item" onclick="toggleCheckbox(this)">
+                            <div class="checkbox-box"></div>
+                            <span class="option-text">头颈舒缓恢复</span>
+                        </div>
+                        <div class="checkbox-item" onclick="toggleCheckbox(this)">
+                            <div class="checkbox-box"></div>
+                            <span class="option-text">头皮亚健康护理</span>
+                        </div>
+                        <div class="checkbox-item" onclick="toggleCheckbox(this)">
+                            <div class="checkbox-box"></div>
+                            <span class="option-text">中医外治体验</span>
+                        </div>
+                        <div class="checkbox-item" onclick="toggleCheckbox(this)">
+                            <div class="checkbox-box"></div>
+                            <span class="option-text">综合健康咨询</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">联系电话</label>
+                    <input type="tel" class="form-input" id="booking-phone" placeholder="请输入手机号">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">备注（选填）</label>
+                    <textarea class="form-input" id="booking-remark" rows="3" placeholder="如有特殊需求请备注"></textarea>
+                </div>
+                <button class="btn-primary" onclick="submitBooking()">确认预约</button>
+            </div>
+        </div>
+        
+        <!-- ========== 预约成功页 ========== -->
+        <div id="page-booking-success" class="page">
+            <div class="header">
+                <div class="header-title">预约成功</div>
+            </div>
+            
+            <div class="booking-form">
+                <div class="booking-success">
+                    <div class="success-icon">✓</div>
+                    <h3 style="font-size: 18px; margin-bottom: 8px;">预约成功</h3>
+                    <p style="color: var(--text-gray); font-size: 14px;">请按时到达服务点，凭预约码享受服务</p>
+                </div>
+                
+                <div class="booking-code">
+                    <div class="booking-code-label">预约凭证码</div>
+                    <div class="booking-code-value" id="booking-code">QC20240315001</div>
+                </div>
+                
+                <div class="report-section" style="margin: 0; box-shadow: none; border: 1px solid var(--border);">
+                    <div class="section-title" style="margin-bottom: 12px;">预约信息</div>
+                    <div id="booking-info">
+                        <!-- 动态渲染 -->
+                    </div>
+                </div>
+                
+                <button class="btn-primary" style="margin-top: 20px;" onclick="router.navigate('home')">返回首页</button>
+            </div>
+        </div>
+        
+        <!-- ========== 健康商城页 ========== -->
+        <div id="page-shop" class="page">
+            <div class="shop-header">
+                <div class="shop-search">
+                    <span>🔍</span>
+                    <input type="text" placeholder="搜索商品">
+                </div>
+                <div class="shop-cart" onclick="showToast('购物车共 ' + cartCount + ' 件商品')">
+                    🛒
+                    <span class="cart-count" id="cart-count">0</span>
+                </div>
+            </div>
+            
+            <div class="shop-banners">
+                <div class="shop-banner">
+                    <div class="banner-text">
+                        <h4>桌面轻器具专区</h4>
+                        <p>久坐族必备神器</p>
+                    </div>
+                </div>
+                <div class="shop-banner">
+                    <div class="banner-text">
+                        <h4>联名健康包</h4>
+                        <p>青岐×三甲医院联合研发</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section" style="padding: 0 16px;">
+                <div class="section-title">热门商品</div>
+            </div>
+            
+            <div class="product-grid" id="product-list">
+                <!-- 动态渲染 -->
+            </div>
+            
+            <div class="bottom-nav">
+                <div class="nav-item" onclick="router.navigate('home')">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-text">首页</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('courses')">
+                    <span class="nav-icon">🎬</span>
+                    <span class="nav-text">课程</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('checkin')">
+                    <span class="nav-icon">📅</span>
+                    <span class="nav-text">打卡</span>
+                </div>
+                <div class="nav-item active" onclick="router.navigate('shop')">
+                    <span class="nav-icon">🛒</span>
+                    <span class="nav-text">商城</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('profile')">
+                    <span class="nav-icon">👤</span>
+                    <span class="nav-text">我的</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ========== 订单会员页 ========== -->
+        <div id="page-orders" class="page">
+            <div class="header">
+                <div class="header-back" onclick="router.navigate('profile')">←</div>
+                <div class="header-title">我的订单</div>
+            </div>
+            
+            <div class="order-tabs">
+                <div class="order-tab active" data-status="all" onclick="filterOrders('all')">全部</div>
+                <div class="order-tab" data-status="pending" onclick="filterOrders('pending')">待支付</div>
+                <div class="order-tab" data-status="paid" onclick="filterOrders('paid')">已支付</div>
+                <div class="order-tab" data-status="completed" onclick="filterOrders('completed')">已完成</div>
+            </div>
+            
+            <div class="order-list" id="order-list">
+                <!-- 动态渲染 -->
+            </div>
+        </div>
+        
+        <!-- ========== 会员页 ========== -->
+        <div id="page-vip" class="page">
+            <div class="header">
+                <div class="header-back" onclick="router.navigate('profile')">←</div>
+                <div class="header-title">会员中心</div>
+            </div>
+            
+            <div class="vip-banner">
+                <div class="vip-title">青岐复元会员</div>
+                <div class="vip-subtitle">享受更多专属权益，开启健康新生活</div>
+                <div class="vip-plans">
+                    <div class="vip-plan" onclick="selectVipPlan('monthly')">
+                        <div class="vip-plan-name">月度会员</div>
+                        <div class="vip-plan-price">¥29</div>
+                        <div class="vip-plan-unit">/月</div>
+                        <div class="vip-plan-origin">¥59/月</div>
+                    </div>
+                    <div class="vip-plan popular" onclick="selectVipPlan('yearly')">
+                        <div class="vip-plan-name">年度会员</div>
+                        <div class="vip-plan-price">¥199</div>
+                        <div class="vip-plan-unit">/年</div>
+                        <div class="vip-plan-origin">¥499/年</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="vip-features">
+                <div class="section-title">会员特权</div>
+                <div class="vip-feature-item">
+                    <span class="vip-feature-icon">✓</span>
+                    <span>全部课程免费观看</span>
+                </div>
+                <div class="vip-feature-item">
+                    <span class="vip-feature-icon">✓</span>
+                    <span>无限次打卡记录</span>
+                </div>
+                <div class="vip-feature-item">
+                    <span class="vip-feature-icon">✓</span>
+                    <span>线下服务优先预约</span>
+                </div>
+                <div class="vip-feature-item">
+                    <span class="vip-feature-icon">✓</span>
+                    <span>专属健康顾问咨询</span>
+                </div>
+                <div class="vip-feature-item">
+                    <span class="vip-feature-icon">✓</span>
+                    <span>会员专享商品折扣</span>
+                </div>
+                <div class="vip-feature-item">
+                    <span class="vip-feature-icon">✓</span>
+                    <span>每月免费体验券×2</span>
+                </div>
+            </div>
+            
+            <div style="padding: 16px;">
+                <button class="btn-primary" id="vip-buy-btn" onclick="buyVip()">立即开通年度会员</button>
+            </div>
+        </div>
+        
+        <!-- ========== 活动报名页 ========== -->
+        <div id="page-activities" class="page">
+            <div class="header">
+                <div class="header-back" onclick="router.navigate('home')">←</div>
+                <div class="header-title">活动报名</div>
+            </div>
+            
+            <div class="activity-list" id="activity-list">
+                <!-- 动态渲染 -->
+            </div>
+            
+            <div class="bottom-nav">
+                <div class="nav-item" onclick="router.navigate('home')">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-text">首页</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('courses')">
+                    <span class="nav-icon">🎬</span>
+                    <span class="nav-text">课程</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('checkin')">
+                    <span class="nav-icon">📅</span>
+                    <span class="nav-text">打卡</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('shop')">
+                    <span class="nav-icon">🛒</span>
+                    <span class="nav-text">商城</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('profile')">
+                    <span class="nav-icon">👤</span>
+                    <span class="nav-text">我的</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ========== 活动详情页 ========== -->
+        <div id="page-activity-detail" class="page">
+            <div class="header">
+                <div class="header-back" onclick="router.navigate('activities')">←</div>
+                <div class="header-title">活动详情</div>
+            </div>
+            
+            <div id="activity-detail-content">
+                <!-- 动态渲染 -->
+            </div>
+        </div>
+        
+        <!-- ========== AI头皮检测页 ========== -->
+        <div id="page-ai-scalp" class="page">
+            <div class="header">
+                <div class="header-back" onclick="router.navigate('home')">←</div>
+                <div class="header-title">AI头皮检测</div>
+            </div>
+            
+            <div class="ai-detection-container" id="ai-scalp-container">
+                <!-- 上传区域 -->
+                <div class="upload-area" id="upload-area" onclick="document.getElementById('file-input').click()">
+                    <input type="file" id="file-input" accept="image/*" style="display: none;" onchange="handleFileSelect(event)">
+                    <div class="upload-icon">📷</div>
+                    <div class="upload-text">点击上传头皮照片</div>
+                    <div class="upload-hint">支持 JPG/PNG 格式，建议正面拍摄</div>
+                </div>
+                
+                <!-- 预览区域 -->
+                <div class="preview-area">
+                    <div class="preview-title">照片预览</div>
+                    <img id="preview-image" class="preview-image" alt="预览">
+                    <div class="preview-placeholder" id="preview-placeholder">
+                        <span>尚未上传照片</span>
+                    </div>
+                </div>
+                
+                <!-- 症状描述 -->
+                <div class="symptom-input">
+                    <div class="form-label">补充描述您的头皮症状（选填）</div>
+                    <textarea class="symptom-textarea" id="symptom-desc" placeholder="例如：最近头皮出油比较严重，洗完头第二天就油腻腻的，偶尔会有瘙痒感..."></textarea>
+                </div>
+                
+                <!-- 检测按钮 -->
+                <button class="btn-detect" id="detect-btn" onclick="startDetection()">
+                    <span class="loading-icon">⏳</span>
+                    <span id="detect-btn-text">🔍 开始AI检测</span>
+                </button>
+                
+                <!-- 检测结果区域 -->
+                <div id="detection-result" class="hidden">
+                    <!-- 动态渲染 -->
+                </div>
+                
+                <!-- 免责声明 -->
+                <div class="disclaimer">
+                    <span class="disclaimer-icon">⚠️</span>
+                    AI检测结果仅供参考，如有头皮问题请咨询专业医师
+                </div>
+            </div>
+            
+            <div class="bottom-nav">
+                <div class="nav-item" onclick="router.navigate('home')">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-text">首页</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('courses')">
+                    <span class="nav-icon">🎬</span>
+                    <span class="nav-text">课程</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('checkin')">
+                    <span class="nav-icon">📅</span>
+                    <span class="nav-text">打卡</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('shop')">
+                    <span class="nav-icon">🛒</span>
+                    <span class="nav-text">商城</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('profile')">
+                    <span class="nav-icon">👤</span>
+                    <span class="nav-text">我的</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 通用弹窗 -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title" id="modal-title">提示</div>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <div class="modal-icon" id="modal-icon">✓</div>
+                <div class="modal-text" id="modal-text">操作成功</div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-cancel" onclick="closeModal()">取消</button>
+                <button class="modal-btn modal-btn-confirm" onclick="closeModal()">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== 全局状态 ==========
+        const state = {
+            isLoggedIn: false,
+            user: {
+                name: '小王',
+                phone: '138****8888',
+                vip: false
+            },
+            cartCount: 0,
+            currentQuestion: 0,
+            answers: {},
+            checkedTypes: [],
+            calendarMonth: new Date(),
+            checkedDates: ['2024-03-01', '2024-03-03', '2024-03-05', '2024-03-07', '2024-03-08', '2024-03-10', '2024-03-12'],
+            selectedLocation: null,
+            selectedVipPlan: 'yearly',
+            currentActivity: null
+        };
+        
+        // ========== 问卷题目数据 ==========
+        const questions = [
+            {
+                id: 1,
+                type: 'scale',
+                title: '最近一周，您的颈部僵硬程度如何？',
+                options: [
+                    { value: 1, label: '无僵硬' },
+                    { value: 2, label: '轻微' },
+                    { value: 3, label: '中等' },
+                    { value: 4, label: '较重' },
+                    { value: 5, label: '严重' }
+                ]
+            },
+            {
+                id: 2,
+                type: 'scale',
+                title: '您的肩背酸痛情况是怎样的？',
+                options: [
+                    { value: 1, label: '无不适' },
+                    { value: 2, label: '轻微酸痛' },
+                    { value: 3, label: '中等酸痛' },
+                    { value: 4, label: '明显酸痛' },
+                    { value: 5, label: '难以忍受' }
+                ]
+            },
+            {
+                id: 3,
+                type: 'scale',
+                title: '您的腰部疲劳状态如何？',
+                options: [
+                    { value: 1, label: '无疲劳感' },
+                    { value: 2, label: '偶尔疲劳' },
+                    { value: 3, label: '时常疲劳' },
+                    { value: 4, label: '经常疲劳' },
+                    { value: 5, label: '持续疲劳' }
+                ]
+            },
+            {
+                id: 4,
+                type: 'single',
+                title: '您的睡眠质量总体评价？',
+                options: [
+                    { value: 1, label: '非常好，倒头就睡' },
+                    { value: 2, label: '较好，偶尔失眠' },
+                    { value: 3, label: '一般，睡眠浅' },
+                    { value: 4, label: '较差，入睡困难' },
+                    { value: 5, label: '很差，严重失眠' }
+                ]
+            },
+            {
+                id: 5,
+                type: 'single',
+                title: '您每天久坐/学习工作时长大约是？',
+                options: [
+                    { value: 1, label: '少于4小时' },
+                    { value: 2, label: '4-6小时' },
+                    { value: 3, label: '6-8小时' },
+                    { value: 4, label: '8-10小时' },
+                    { value: 5, label: '超过10小时' }
+                ]
+            },
+            {
+                id: 6,
+                type: 'multiple',
+                title: '您是否有以下头皮问题？（可多选）',
+                options: [
+                    { value: 'oil', label: '头皮出油' },
+                    { value: 'itch', label: '头皮瘙痒' },
+                    { value: 'hairfall', label: '掉发增多' },
+                    { value: 'none', label: '无以上问题' }
+                ]
+            }
+        ];
+        
+        // ========== 课程数据 ==========
+        const courses = [
+            { id: 1, title: '颈肩深度放松术', duration: '15分钟', category: 'neck', cover: 'relax', desc: '通过专业的中医按摩手法和拉伸动作，帮助缓解颈肩肌肉紧张，改善血液循环。' },
+            { id: 2, title: '腰部舒缓保养', duration: '12分钟', category: 'lumbar', cover: 'lumbar', desc: '针对久坐导致的腰部疲劳，设计了一套简单有效的腰部放松动作。' },
+            { id: 3, title: '头皮指压放松', duration: '10分钟', category: 'scalp', cover: 'scalp', desc: '通过头皮穴位按摩，促进头部血液循环，缓解头皮紧绷感。' },
+            { id: 4, title: '睡眠改善呼吸法', duration: '20分钟', category: 'sleep', cover: 'sleep', desc: '结合中医养生理念的助眠呼吸法，帮助改善睡眠质量。' },
+            { id: 5, title: '办公室节律操', duration: '8分钟', category: 'rhythm', cover: 'rhythm', desc: '适合在工作间隙进行的简短运动，帮助恢复身体节律。' },
+            { id: 6, title: '肩颈自我按摩', duration: '10分钟', category: 'neck', cover: 'relax', desc: '学习自我按摩技巧，随时缓解肩颈不适。' },
+            { id: 7, title: '睡前放松序列', duration: '15分钟', category: 'sleep', cover: 'sleep', desc: '睡前进行的身体放松练习，帮助更好地入睡。' },
+            { id: 8, title: '坐姿矫正训练', duration: '12分钟', category: 'rhythm', cover: 'rhythm', desc: '纠正不良坐姿习惯，预防因久坐导致的身体问题。' }
+        ];
+        
+        // ========== 商品数据 ==========
+        const products = [
+            { id: 1, title: '颈椎牵引枕', price: 89, sales: 326, icon: '🛏️' },
+            { id: 2, title: '桌面按摩仪', price: 199, sales: 215, icon: '💆' },
+            { id: 3, title: '头皮按摩梳', price: 49, sales: 528, icon: '🪮' },
+            { id: 4, title: '青岐健康包', price: 299, sales: 156, icon: '📦' },
+            { id: 5, title: '腰部热敷带', price: 129, sales: 189, icon: '🔥' },
+            { id: 6, title: '眼部蒸汽仪', price: 159, sales: 267, icon: '👁️' },
+            { id: 7, title: '助眠香薰套装', price: 79, sales: 412, icon: '🌙' },
+            { id: 8, title: '姿势矫正带', price: 99, sales: 183, icon: '🎯' }
+        ];
+        
+        // ========== 地点数据 ==========
+        const locations = [
+            { id: 1, name: '北京大学健康服务站', type: 'campus', address: '北京市海淀区颐和园路5号', time: '周一至周五 9:00-18:00', services: ['头颈舒缓恢复', '头皮亚健康护理'], slots: 5 },
+            { id: 2, name: '中关村软件园快闪点', type: 'park', address: '北京市海淀区中关村软件园二期', time: '工作日 12:00-14:00', services: ['头颈舒缓恢复', '中医外治体验'], slots: 3 },
+            { id: 3, name: '国家图书馆服务点', type: 'library', address: '北京市海淀区中关村南大街33号', time: '周六日 10:00-17:00', services: ['头皮亚健康护理', '综合健康咨询'], slots: 8 },
+            { id: 4, name: '清华大学健康中心', type: 'campus', address: '北京市海淀区清华园1号', time: '周一至周六 9:00-17:00', services: ['头颈舒缓恢复', '头皮亚健康护理', '中医外治体验'], slots: 6 }
+        ];
+        
+        // ========== 活动数据 ==========
+        const activities = [
+            { id: 1, title: '春季健康周', type: 'health', date: '2024-03-15', time: '全天', location: '北京大学体育馆', content: '免费亚健康评估 + 头颈舒缓体验', total: 200, registered: 156, icon: '🏥' },
+            { id: 2, title: '考研减压专场', type: 'stress', date: '2024-03-20', time: '14:00-17:00', location: '清华大学图书馆', content: '针对学生群体的头皮护理 + 放松课程', total: 100, registered: 89, icon: '📚' },
+            { id: 3, title: '企业健康日', type: 'enterprise', date: '2024-03-25', time: '全天', location: '中关村软件园', content: '团队健康讲座 + 现场体验服务', total: 150, registered: 67, icon: '🏢' }
+        ];
+        
+        // ========== 订单数据 ==========
+        const orders = [
+            { id: 'ORD20240312001', title: '颈椎牵引枕', status: 'paid', price: 89, date: '2024-03-12', icon: '🛏️' },
+            { id: 'ORD20240310002', title: '头皮按摩梳', status: 'pending', price: 49, date: '2024-03-10', icon: '🪮' },
+            { id: 'ORD20240308003', title: '青岐健康包', status: 'completed', price: 299, date: '2024-03-08', icon: '📦' }
+        ];
+        
+        // ========== 路由系统 ==========
+        const router = {
+            pages: {},
+            
+            init() {
+                document.querySelectorAll('.page').forEach(page => {
+                    this.pages[page.id.replace('page-', '')] = page;
+                });
+            },
+            
+            navigate(page, params = {}) {
+                // 隐藏所有页面
+                Object.values(this.pages).forEach(p => p.classList.remove('active'));
+                
+                // 显示目标页面
+                const targetPage = this.pages[page];
+                if (targetPage) {
+                    targetPage.classList.add('active');
+                    window.scrollTo(0, 0);
+                    
+                    // 触发页面初始化
+                    if (page === 'assessment') initAssessment();
+                    if (page === 'report') initReport();
+                    if (page === 'courses') initCourses();
+                    if (page === 'course-detail' && params.id) initCourseDetail(params.id);
+                    if (page === 'checkin') initCheckin();
+                    if (page === 'booking') initLocations();
+                    if (page === 'booking-form' && params.location) initBookingForm(params.location);
+                    if (page === 'booking-success') initBookingSuccess();
+                    if (page === 'shop') initShop();
+                    if (page === 'orders') initOrders();
+                    if (page === 'activities') initActivities();
+                    if (page === 'activity-detail' && params.id) initActivityDetail(params.id);
+                    if (page === 'vip') initVip();
+                    if (page === 'ai-scalp') initAiScalp();
+                    
+                    // 更新底部导航
+                    updateBottomNav(page);
+                }
+            }
+        };
+        
+        // ========== 通用函数 ==========
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        }
+        
+        function showModal(title, text, icon = '✓', showCancel = false) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-text').textContent = text;
+            document.getElementById('modal-icon').textContent = icon;
+            document.querySelector('.modal-btn-cancel').style.display = showCancel ? 'block' : 'none';
+            document.getElementById('modal').classList.add('show');
+        }
+        
+        function closeModal() {
+            document.getElementById('modal').classList.remove('show');
+        }
+        
+        function updateBottomNav(page) {
+            const navMap = ['home', 'courses', 'checkin', 'shop', 'profile'];
+            document.querySelectorAll('.bottom-nav .nav-item').forEach((item, index) => {
+                item.classList.toggle('active', navMap[index] === page);
+            });
+        }
+        
+        // ========== 认证相关 ==========
+        function switchAuthTab(tab) {
+            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`.auth-tab[data-tab="${tab}"]`).classList.add('active');
+            
+            document.getElementById('auth-login').classList.toggle('hidden', tab !== 'login');
+            document.getElementById('auth-register').classList.toggle('hidden', tab !== 'register');
+            document.getElementById('auth-forget').classList.toggle('hidden', tab !== 'forget');
+        }
+        
+        function sendCode(type) {
+            const btn = document.getElementById(`${type}-code-btn`);
+            let countdown = 60;
+            
+            btn.disabled = true;
+            btn.textContent = `${countdown}秒后重试`;
+            
+            const timer = setInterval(() => {
+                countdown--;
+                btn.textContent = `${countdown}秒后重试`;
+                if (countdown <= 0) {
+                    clearInterval(timer);
+                    btn.disabled = false;
+                    btn.textContent = '获取验证码';
+                }
+            }, 1000);
+            
+            showToast('验证码已发送');
+        }
+        
+        function handleLogin() {
+            const phone = document.getElementById('login-phone').value;
+            const code = document.getElementById('login-code').value;
+            
+            if (!phone || phone.length !== 11) {
+                showToast('请输入正确的手机号');
+                return;
+            }
+            if (!code || code.length !== 6) {
+                showToast('请输入6位验证码');
+                return;
+            }
+            
+            state.isLoggedIn = true;
+            showModal('登录成功', `欢迎回来，${state.user.name}！`, '👋');
+            setTimeout(() => {
+                closeModal();
+                router.navigate('home');
+            }, 1500);
+        }
+        
+        function handleRegister() {
+            const phone = document.getElementById('reg-phone').value;
+            const code = document.getElementById('reg-code').value;
+            const password = document.getElementById('reg-password').value;
+            
+            if (!phone || phone.length !== 11) {
+                showToast('请输入正确的手机号');
+                return;
+            }
+            if (!code || code.length !== 6) {
+                showToast('请输入6位验证码');
+                return;
+            }
+            if (!password || password.length < 6) {
+                showToast('密码至少6位');
+                return;
+            }
+            
+            state.isLoggedIn = true;
+            showModal('注册成功', '欢迎加入青岐复元！', '🎉');
+            setTimeout(() => {
+                closeModal();
+                router.navigate('home');
+            }, 1500);
+        }
+        
+        function handleForget() {
+            const phone = document.getElementById('forget-phone').value;
+            const code = document.getElementById('forget-code').value;
+            const password = document.getElementById('forget-password').value;
+            
+            if (!phone || phone.length !== 11) {
+                showToast('请输入正确的手机号');
+                return;
+            }
+            if (!code || code.length !== 6) {
+                showToast('请输入6位验证码');
+                return;
+            }
+            if (!password || password.length < 6) {
+                showToast('密码至少6位');
+                return;
+            }
+            
+            showModal('密码重置成功', '请使用新密码登录', '🔐');
+            setTimeout(() => {
+                closeModal();
+                switchAuthTab('login');
+            }, 1500);
+        }
+        
+        // ========== 评估问卷相关 ==========
+        function initAssessment() {
+            state.currentQuestion = 0;
+            state.answers = {};
+            renderQuestion();
+        }
+        
+        function renderQuestion() {
+            const q = questions[state.currentQuestion];
+            const total = questions.length;
+            
+            document.getElementById('current-q').textContent = state.currentQuestion + 1;
+            document.getElementById('total-q').textContent = total;
+            document.getElementById('assessment-progress').style.width = `${((state.currentQuestion + 1) / total) * 100}%`;
+            
+            let optionsHTML = '';
+            if (q.type === 'scale') {
+                optionsHTML = `<div class="scale-options">
+                    ${q.options.map(opt => `
+                        <div class="scale-option ${state.answers[q.id] === opt.value ? 'selected' : ''}" 
+                             onclick="selectOption(${q.id}, ${opt.value})">
+                            <div class="scale-value">${opt.value}</div>
+                            <div class="scale-label">${opt.label}</div>
+                        </div>
+                    `).join('')}
+                </div>`;
+            } else if (q.type === 'single') {
+                optionsHTML = `<div class="option-list">
+                    ${q.options.map(opt => `
+                        <div class="option-item ${state.answers[q.id] === opt.value ? 'selected' : ''}"
+                             onclick="selectOption(${q.id}, ${opt.value})">
+                            <div class="option-radio"></div>
+                            <div class="option-text">${opt.label}</div>
+                        </div>
+                    `).join('')}
+                </div>`;
+            } else if (q.type === 'multiple') {
+                const selected = state.answers[q.id] || [];
+                optionsHTML = `<div class="checkbox-options">
+                    ${q.options.map(opt => `
+                        <div class="checkbox-item ${selected.includes(opt.value) ? 'selected' : ''}"
+                             onclick="selectMultiOption('${opt.value}')">
+                            <div class="checkbox-box"></div>
+                            <span class="option-text">${opt.label}</span>
+                        </div>
+                    `).join('')}
+                </div>`;
+            }
+            
+            document.getElementById('assessment-questions').innerHTML = `
+                <div class="question-card">
+                    <div class="question-number">第 ${state.currentQuestion + 1} 题</div>
+                    <div class="question-title">${q.title}</div>
+                    ${optionsHTML}
+                </div>
+            `;
+            
+            // 更新按钮
+            document.getElementById('prev-btn').style.display = state.currentQuestion > 0 ? 'block' : 'none';
+            const nextBtn = document.getElementById('next-btn');
+            nextBtn.textContent = state.currentQuestion === total - 1 ? '提交评估' : '下一题';
+        }
+        
+        function selectOption(qId, value) {
+            state.answers[qId] = value;
+            renderQuestion();
+        }
+        
+        function selectMultiOption(value) {
+            if (!state.answers[6]) state.answers[6] = [];
+            const index = state.answers[6].indexOf(value);
+            if (index > -1) {
+                state.answers[6].splice(index, 1);
+            } else {
+                state.answers[6].push(value);
+            }
+            renderQuestion();
+        }
+        
+        function prevQuestion() {
+            if (state.currentQuestion > 0) {
+                state.currentQuestion--;
+                renderQuestion();
+            }
+        }
+        
+        function nextQuestion() {
+            const q = questions[state.currentQuestion];
+            
+            if (q.type === 'multiple') {
+                if (!state.answers[6] || state.answers[6].length === 0) {
+                    showToast('请至少选择一项');
+                    return;
+                }
+            } else {
+                if (!state.answers[q.id]) {
+                    showToast('请选择一个选项');
+                    return;
+                }
+            }
+            
+            if (state.currentQuestion < questions.length - 1) {
+                state.currentQuestion++;
+                renderQuestion();
+            } else {
+                router.navigate('report');
+            }
+        }
+        
+        // ========== 评估报告相关 ==========
+        function initReport() {
+            // 计算评分
+            const scores = {
+                neck: state.answers[1] || 3,
+                shoulder: state.answers[2] || 3,
+                lumbar: state.answers[3] || 3,
+                sleep: state.answers[4] || 3,
+                sedentary: state.answers[5] || 3,
+                scalp: (state.answers[6] || []).length > 0 ? 3 : 1
+            };
+            
+            // 计算总分 (100分制)
+            const totalScore = Math.round(100 - (
+                (scores.neck - 1) * 8 +
+                (scores.shoulder - 1) * 8 +
+                (scores.lumbar - 1) * 8 +
+                (scores.sleep - 1) * 8 +
+                (scores.sedentary - 1) * 6 +
+                (scores.scalp - 1) * 6
+            ));
+            
+            document.getElementById('report-score').textContent = totalScore;
+            
+            // 判断等级
+            let level, summary;
+            if (totalScore >= 80) {
+                level = '健康状态良好';
+                summary = '您的整体状态良好，处于健康范围。请继续保持良好的生活习惯，定期进行健康评估。';
+            } else if (totalScore >= 60) {
+                level = '轻度亚健康';
+                summary = '您的整体状态良好，处于轻度亚健康范围。主要问题集中在颈肩部位和睡眠质量，建议通过日常干预和规律作息来改善。';
+            } else if (totalScore >= 40) {
+                level = '中度亚健康';
+                summary = '您的身体状态需要注意，存在中等程度的亚健康问题。建议积极参与干预课程和线下服务，同时改善生活习惯。';
+            } else {
+                level = '重度亚健康';
+                summary = '您的身体状态需要重点关注。建议尽快预约线下服务进行专业评估，同时坚持每日打卡干预。';
+            }
+            
+            document.getElementById('report-level').textContent = level;
+            document.getElementById('report-summary').textContent = summary;
+            
+            // 渲染雷达图
+            renderRadarChart(scores);
+            
+            // 渲染推荐课程
+            renderRecommendations();
+        }
+        
+        function renderRadarChart(scores) {
+            const chartDom = document.getElementById('radar-chart');
+            const myChart = echarts.init(chartDom);
+            
+            const option = {
+                radar: {
+                    indicator: [
+                        { name: '颈部状态', max: 5 },
+                        { name: '肩背状态', max: 5 },
+                        { name: '腰部状态', max: 5 },
+                        { name: '睡眠质量', max: 5 },
+                        { name: '久坐程度', max: 5 },
+                        { name: '头皮状态', max: 5 }
+                    ],
+                    radius: '65%',
+                    axisName: {
+                        color: '#666',
+                        fontSize: 12
+                    }
+                },
+                series: [{
+                    type: 'radar',
+                    data: [{
+                        value: [scores.neck, scores.shoulder, scores.lumbar, scores.sleep, scores.sedentary, scores.scalp],
+                        name: '健康状态',
+                        areaStyle: {
+                            color: 'rgba(76, 175, 80, 0.3)'
+                        },
+                        lineStyle: {
+                            color: '#4CAF50'
+                        },
+                        itemStyle: {
+                            color: '#4CAF50'
+                        }
+                    }]
+                }]
+            };
+            
+            myChart.setOption(option);
+        }
+        
+        function renderRecommendations() {
+            const recommendations = [
+                { icon: '🎬', title: '颈肩深度放松术', desc: '15分钟 · 推荐每日练习', tag: '热门' },
+                { icon: '😴', title: '睡眠改善呼吸法', desc: '20分钟 · 睡前练习', tag: '推荐' },
+                { icon: '💆', title: '头皮指压放松', desc: '10分钟 · 午间休息', tag: '必学' }
+            ];
+            
+            document.getElementById('recommend-courses').innerHTML = recommendations.map(rec => `
+                <div class="recommend-item" onclick="router.navigate('course-detail', {id: 1})">
+                    <div class="recommend-img">${rec.icon}</div>
+                    <div class="recommend-info">
+                        <div class="recommend-title">${rec.title}</div>
+                        <div class="recommend-desc">${rec.desc}</div>
+                    </div>
+                    <span class="recommend-tag">${rec.tag}</span>
+                </div>
+            `).join('');
+        }
+        
+        // ========== 课程相关 ==========
+        function initCourses(category = 'all') {
+            const filtered = category === 'all' ? courses : courses.filter(c => c.category === category);
+            
+            document.getElementById('course-list').innerHTML = filtered.map(course => `
+                <div class="course-card" onclick="router.navigate('course-detail', {id: ${course.id}})">
+                    <div class="course-cover ${course.cover}">${getCourseIcon(course.cover)}</div>
+                    <div class="course-info">
+                        <div class="course-title">${course.title}</div>
+                        <div class="course-meta">
+                            <span>${course.duration}</span>
+                            <span class="course-tag">${getCategoryName(course.category)}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function filterCourses(category) {
+            document.querySelectorAll('.category-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.category === category);
+            });
+            initCourses(category);
+        }
+        
+        function getCourseIcon(cover) {
+            const icons = { relax: '🧘', lumbar: '🦴', scalp: '💆', sleep: '😴', rhythm: '⏰' };
+            return icons[cover] || '🎬';
+        }
+        
+        function getCategoryName(category) {
+            const names = { neck: '颈肩放松', lumbar: '腰部舒缓', scalp: '头皮舒缓', sleep: '睡眠改善', rhythm: '节律恢复' };
+            return names[category] || category;
+        }
+        
+        function initCourseDetail(id) {
+            const course = courses.find(c => c.id === id) || courses[0];
+            
+            document.getElementById('course-detail-content').innerHTML = `
+                <div class="course-detail-cover course-cover ${course.cover}">${getCourseIcon(course.cover)}</div>
+                <div class="course-detail-info">
+                    <div class="course-detail-title">${course.title}</div>
+                    <div class="course-detail-meta">
+                        <span>⏱️ ${course.duration}</span>
+                        <span>🏷️ ${getCategoryName(course.category)}</span>
+                    </div>
+                    <div class="course-detail-desc">${course.desc}</div>
+                    
+                    <div class="section-title" style="margin-top: 20px;">课程步骤</div>
+                    <div class="course-steps">
+                        <div class="step-item">
+                            <div class="step-num">1</div>
+                            <div class="step-content">
+                                <div class="step-title">热身准备</div>
+                                <div class="step-desc">轻柔转动头部，放松颈部肌肉</div>
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-num">2</div>
+                            <div class="step-content">
+                                <div class="step-title">核心练习</div>
+                                <div class="step-desc">跟随视频引导完成主要动作</div>
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-num">3</div>
+                            <div class="step-content">
+                                <div class="step-title">放松整理</div>
+                                <div class="step-desc">深呼吸，让身体慢慢放松</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // ========== AI头皮检测相关 ==========
+        
+        // ========== 讯飞API配置区域 ==========
+        // 注意：由于讯飞API需要签名认证，前端直接调用存在跨域问题
+        // 如需启用真实API，请部署后端服务代理，以下为配置占位符
+        const XUNFEI_CONFIG = {
+            // ==== 请用户填写以下信息 ====
+            appId: '',           // 讯飞应用ID
+            apiKey: '',          // 讯飞API Key
+            apiSecret: '',       // 讯飞API Secret
+            // ============================
+            
+            // 图像识别API端点
+            imageUrl: 'https://api.xf-yun.com/v1/private/xxxxx',
+            // 文本生成API端点
+            chatUrl: 'https://api.xf-yun.com/v1/private/xxxxx'
+        };
+        
+        // 假数据 - 用于展示效果
+        const fakeDetectionResult = {
+            scalpCondition: {
+                oilLevel: '中度出油',
+                oilScore: 3,
+                itchLevel: '轻微瘙痒',
+                itchScore: 2,
+                hairLossLevel: '轻度掉发',
+                hairLossScore: 2
+            },
+            analysis: '根据图像分析和症状描述，您的头皮属于湿热型。图像显示头皮油脂分泌较为旺盛，毛孔有轻微堵塞迹象。结合您描述的瘙痒感，建议调理头皮环境，配合穴位按摩改善。',
+            diagnosisType: '湿热型头皮',
+            acupoints: [
+                { 
+                    name: '百会穴', 
+                    location: '头顶正中，两耳尖连线中点', 
+                    method: '用指腹顺时针按揉30次，力度适中', 
+                    duration: '2分钟' 
+                },
+                { 
+                    name: '风池穴', 
+                    location: '后颈部发际线两侧凹陷处', 
+                    method: '用拇指按压，力度由轻到重', 
+                    duration: '3分钟' 
+                },
+                { 
+                    name: '四神聪穴', 
+                    location: '百会穴前后左右各1寸处', 
+                    method: '四指同时点按，轻柔旋转', 
+                    duration: '2分钟' 
+                },
+                { 
+                    name: '太阳穴', 
+                    location: '眉梢与目外眦之间向后约1寸凹陷处', 
+                    method: '用食指指腹点按，轻柔画圈', 
+                    duration: '2分钟' 
+                }
+            ]
+        };
+        
+        // 存储上传的图片
+        let uploadedImageData = null;
+        
+        // AI头皮检测页面初始化
+        function initAiScalp() {
+            uploadedImageData = null;
+            document.getElementById('preview-image').classList.remove('show');
+            document.getElementById('preview-placeholder').classList.remove('hidden');
+            document.getElementById('preview-image').src = '';
+            document.getElementById('symptom-desc').value = '';
+            document.getElementById('detection-result').classList.add('hidden');
+            document.getElementById('detect-btn').disabled = false;
+            document.getElementById('detect-btn-text').textContent = '🔍 开始AI检测';
+            document.getElementById('detect-btn').classList.remove('loading');
+        }
+        
+        // 处理文件选择
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // 验证文件类型
+            if (!file.type.startsWith('image/')) {
+                showToast('请上传图片文件');
+                return;
+            }
+            
+            // 验证文件大小（限制5MB）
+            if (file.size > 5 * 1024 * 1024) {
+                showToast('图片大小不能超过5MB');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                uploadedImageData = e.target.result;
+                document.getElementById('preview-image').src = uploadedImageData;
+                document.getElementById('preview-image').classList.add('show');
+                document.getElementById('preview-placeholder').classList.add('hidden');
+                showToast('图片上传成功');
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        // 开始AI检测
+        async function startDetection() {
+            if (!uploadedImageData) {
+                showToast('请先上传头皮照片');
+                return;
+            }
+            
+            const btn = document.getElementById('detect-btn');
+            const btnText = document.getElementById('detect-btn-text');
+            
+            btn.disabled = true;
+            btn.classList.add('loading');
+            btnText.textContent = 'AI分析中...';
+            
+            try {
+                // 检查是否配置了真实的API
+                if (XUNFEI_CONFIG.apiKey && XUNFEI_CONFIG.apiSecret) {
+                    // TODO: 调用真实API
+                    // 由于跨域问题，这里需要后端代理
+                    // 实际项目中建议将图片和症状描述发送到后端，由后端调用讯飞API
+                    console.log('准备调用讯飞API...');
+                    console.log('图片数据:', uploadedImageData ? '已上传' : '未上传');
+                    console.log('症状描述:', document.getElementById('symptom-desc').value);
+                    
+                    // 模拟API调用延迟
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    
+                    // 这里应该调用实际的API并获取结果
+                    // 暂时使用假数据
+                    renderDetectionResult(fakeDetectionResult);
+                } else {
+                    // 使用假数据演示效果
+                    console.log('使用假数据进行演示');
+                    // 模拟API调用延迟
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    renderDetectionResult(fakeDetectionResult);
+                }
+            } catch (error) {
+                console.error('检测失败:', error);
+                showToast('检测失败，请重试');
+            } finally {
+                btn.disabled = false;
+                btn.classList.remove('loading');
+                btnText.textContent = '🔍 重新检测';
+            }
+        }
+        
+        // 渲染检测结果
+        function renderDetectionResult(result) {
+            const resultContainer = document.getElementById('detection-result');
+            resultContainer.classList.remove('hidden');
+            
+            resultContainer.innerHTML = `
+                <div class="detection-result" style="margin-top: 16px;">
+                    <div class="result-header">
+                        <div class="result-icon">🤖</div>
+                        <div>
+                            <div class="result-title">头皮状态评估报告</div>
+                            <div class="result-subtitle">基于AI图像分析与症状描述</div>
+                        </div>
+                    </div>
+                    
+                    <div class="condition-grid">
+                        <div class="condition-item">
+                            <div class="condition-value">${result.scalpCondition.oilScore}分</div>
+                            <div class="condition-label">出油程度</div>
+                        </div>
+                        <div class="condition-item">
+                            <div class="condition-value">${result.scalpCondition.itchScore}分</div>
+                            <div class="condition-label">瘙痒程度</div>
+                        </div>
+                        <div class="condition-item">
+                            <div class="condition-value">${result.scalpCondition.hairLossScore}分</div>
+                            <div class="condition-label">掉发感知</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 12px;">
+                        <div class="form-label" style="font-weight: 600;">头皮类型判定</div>
+                        <div style="background: var(--bg-light-green); padding: 10px 14px; border-radius: 8px; display: inline-block;">
+                            <span style="color: var(--primary); font-weight: 600;">${result.diagnosisType}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="analysis-text">
+                        <strong>辨证分析：</strong><br>
+                        ${result.analysis}
+                    </div>
+                </div>
+                
+                <div class="acupoint-section">
+                    <div class="section-title">穴位按摩保健建议</div>
+                    
+                    <div class="acupoint-card">
+                        <div class="acupoint-header">
+                            <div class="acupoint-title">🧘 头部穴位示意图</div>
+                            <div class="acupoint-desc">每日按摩以下穴位，有助于改善头皮状态</div>
+                        </div>
+                        <div class="acupoint-diagram">
+                            <svg class="diagram-svg" viewBox="0 0 300 250" xmlns="http://www.w3.org/2000/svg">
+                                <!-- 头部轮廓 -->
+                                <ellipse cx="150" cy="100" rx="70" ry="80" fill="#FFE4C4" stroke="#DEB887" stroke-width="2"/>
+                                <!-- 头发轮廓 -->
+                                <path d="M80 80 Q150 20 220 80 Q230 100 220 120 Q200 60 150 50 Q100 60 80 120 Q70 100 80 80" fill="#4A4A4A"/>
+                                <!-- 百会穴 -->
+                                <circle cx="150" cy="60" r="8" fill="#4CAF50"/>
+                                <text x="150" y="40" text-anchor="middle" font-size="11" fill="#333">百会穴</text>
+                                <line x1="150" y1="48" x2="150" y2="52" stroke="#4CAF50" stroke-width="2"/>
+                                
+                                <!-- 四神聪穴 -->
+                                <circle cx="150" cy="40" r="5" fill="#81C784"/>
+                                <circle cx="130" cy="50" r="5" fill="#81C784"/>
+                                <circle cx="170" cy="50" r="5" fill="#81C784"/>
+                                <circle cx="150" cy="70" r="5" fill="#81C784"/>
+                                <text x="200" y="35" font-size="10" fill="#333">四神聪</text>
+                                
+                                <!-- 太阳穴 -->
+                                <circle cx="85" cy="95" r="6" fill="#FF9800"/>
+                                <circle cx="215" cy="95" r="6" fill="#FF9800"/>
+                                <text x="55" y="98" font-size="10" fill="#333">太阳</text>
+                                
+                                <!-- 风池穴 -->
+                                <circle cx="100" cy="160" r="6" fill="#2196F3"/>
+                                <circle cx="200" cy="160" r="6" fill="#2196F3"/>
+                                <text x="70" y="165" font-size="10" fill="#333">风池</text>
+                                <text x="220" y="165" font-size="10" fill="#333">风池</text>
+                                
+                                <!-- 标注线 -->
+                                <line x1="150" y1="52" x2="150" y2="55" stroke="#4CAF50" stroke-width="2" marker-end="url(#arrow)"/>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <div class="acupoint-card">
+                        <div class="acupoint-list">
+                            ${result.acupoints.map((acupoint, index) => `
+                                <div class="acupoint-item">
+                                    <div class="acupoint-num">${index + 1}</div>
+                                    <div class="acupoint-info">
+                                        <div class="acupoint-name">${acupoint.name}</div>
+                                        <div class="acupoint-location">📍 ${acupoint.location}</div>
+                                        <div>
+                                            <span class="acupoint-method">💆 ${acupoint.method}</span>
+                                            <span class="acupoint-duration">⏱️ ${acupoint.duration}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <div style="padding: 0 16px 16px;">
+                        <button class="btn-primary" onclick="router.navigate('courses')">
+                            🎬 开始学习头皮舒缓课程
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // 滚动到结果区域
+            resultContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        
+        // ========== 打卡相关 ==========
+        function initCheckin() {
+            renderCalendar();
+            renderTrendChart();
+        }
+        
+        function renderCalendar() {
+            const year = state.calendarMonth.getFullYear();
+            const month = state.calendarMonth.getMonth();
+            
+            document.getElementById('calendar-title').textContent = `${year}年${month + 1}月`;
+            
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const today = new Date();
+            const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+            
+            let html = '';
+            
+            // 空格子
+            for (let i = 0; i < firstDay; i++) {
+                html += '<div class="calendar-day empty"></div>';
+            }
+            
+            // 日期格子
+            for (let d = 1; d <= daysInMonth; d++) {
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                const isToday = dateStr === todayStr;
+                const isChecked = state.checkedDates.includes(dateStr);
+                const isFuture = new Date(dateStr) > today;
+                
+                let className = 'calendar-day';
+                if (isToday) className += ' today';
+                else if (isChecked) className += ' checked';
+                else if (isFuture) className += ' future';
+                
+                html += `<div class="${className}" onclick="clickDate('${dateStr}')">${d}</div>`;
+            }
+            
+            document.getElementById('calendar-days').innerHTML = html;
+        }
+        
+        function changeMonth(delta) {
+            state.calendarMonth.setMonth(state.calendarMonth.getMonth() + delta);
+            renderCalendar();
+        }
+        
+        function clickDate(date) {
+            if (state.checkedDates.includes(date)) {
+                showToast('该日期已完成打卡');
+            } else {
+                showToast('请先进行打卡');
+            }
+        }
+        
+        function toggleCheckin(el, type) {
+            el.classList.toggle('checked');
+            if (el.classList.contains('checked')) {
+                if (!state.checkedTypes.includes(type)) {
+                    state.checkedTypes.push(type);
+                }
+            } else {
+                state.checkedTypes = state.checkedTypes.filter(t => t !== type);
+            }
+        }
+        
+        function doCheckin() {
+            if (state.checkedTypes.length === 0) {
+                showToast('请至少选择一种打卡类型');
+                return;
+            }
+            
+            const today = new Date();
+            const dateStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+            
+            if (!state.checkedDates.includes(dateStr)) {
+                state.checkedDates.push(dateStr);
+            }
+            
+            // 更新统计数据
+            document.getElementById('week-count').textContent = parseInt(document.getElementById('week-count').textContent) + 1;
+            document.getElementById('month-count').textContent = parseInt(document.getElementById('month-count').textContent) + 1;
+            document.getElementById('streak-days').textContent = parseInt(document.getElementById('streak-days').textContent) + 1;
+            
+            // 清空选择
+            state.checkedTypes = [];
+            document.querySelectorAll('.checkin-type-item').forEach(el => el.classList.remove('checked'));
+            
+            renderCalendar();
+            showToast('打卡成功！');
+        }
+        
+        function renderTrendChart() {
+            const chartDom = document.getElementById('trend-chart');
+            const myChart = echarts.init(chartDom);
+            
+            const option = {
+                xAxis: {
+                    type: 'category',
+                    data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+                    axisLine: { lineStyle: { color: '#E0E0E0' } },
+                    axisLabel: { color: '#666', fontSize: 11 }
+                },
+                yAxis: {
+                    type: 'value',
+                    show: false,
+                    min: 0,
+                    max: 100
+                },
+                series: [{
+                    data: [65, 72, 68, 75, 70, 78, 82],
+                    type: 'line',
+                    smooth: true,
+                    areaStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: 'rgba(76, 175, 80, 0.4)' },
+                            { offset: 1, color: 'rgba(76, 175, 80, 0.05)' }
+                        ])
+                    },
+                    lineStyle: { color: '#4CAF50', width: 2 },
+                    itemStyle: { color: '#4CAF50' }
+                }],
+                grid: {
+                    left: 40,
+                    right: 20,
+                    top: 20,
+                    bottom: 30
+                }
+            };
+            
+            myChart.setOption(option);
+        }
+        
+        // ========== 线下预约相关 ==========
+        function initLocations(type = 'all') {
+            const filtered = type === 'all' ? locations : locations.filter(l => l.type === type);
+            
+            document.getElementById('location-list').innerHTML = filtered.map(loc => `
+                <div class="location-card">
+                    <div class="location-header">
+                        <div class="location-name">${loc.name}</div>
+                        <span class="location-badge">可预约</span>
+                    </div>
+                    <div class="location-details">
+                        <div>📍 ${loc.address}</div>
+                        <div>🕐 ${loc.time}</div>
+                        <div>
+                            ${loc.services.map(s => `<span class="location-service">${s}</span>`).join('')}
+                        </div>
+                    </div>
+                    <div class="location-slots">
+                        <div class="slot-info">📅 剩余 <strong>${loc.slots}</strong> 个名额</div>
+                    </div>
+                    <button class="btn-book" onclick="router.navigate('booking-form', {location: ${loc.id}})">立即预约</button>
+                </div>
+            `).join('');
+        }
+        
+        function filterLocation(type) {
+            document.querySelectorAll('.location-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.textContent.includes(
+                    type === 'all' ? '全部' : 
+                    type === 'campus' ? '高校' : 
+                    type === 'park' ? '产业' : '图书'
+                ));
+            });
+            initLocations(type);
+        }
+        
+        function initBookingForm(locationId) {
+            const location = locations.find(l => l.id === locationId);
+            if (location) {
+                document.getElementById('booking-location').value = location.name;
+                state.selectedLocation = location;
+            }
+        }
+        
+        function submitBooking() {
+            const date = document.getElementById('booking-date').value;
+            const time = document.getElementById('booking-time').value;
+            const phone = document.getElementById('booking-phone').value;
+            
+            if (!date || !time || !phone) {
+                showToast('请填写完整信息');
+                return;
+            }
+            
+            if (!/^1[3-9]\d{9}$/.test(phone)) {
+                showToast('请输入正确的手机号');
+                return;
+            }
+            
+            // 生成预约码
+            const code = 'QC' + new Date().toISOString().slice(0,10).replace(/-/g,'') + Math.random().toString(36).substr(2, 4).toUpperCase();
+            state.bookingCode = code;
+            state.bookingInfo = { date, time, phone };
+            
+            router.navigate('booking-success');
+        }
+        
+        function initBookingSuccess() {
+            document.getElementById('booking-code').textContent = state.bookingCode;
+            document.getElementById('booking-info').innerHTML = `
+                <div style="font-size: 14px; line-height: 2;">
+                    <div><strong>地点：</strong>${state.selectedLocation?.name || ''}</div>
+                    <div><strong>日期：</strong>${state.bookingInfo?.date || ''}</div>
+                    <div><strong>时段：</strong>${state.bookingInfo?.time || ''}</div>
+                    <div><strong>电话：</strong>${state.bookingInfo?.phone || ''}</div>
+                </div>
+            `;
+        }
+        
+        function toggleCheckbox(el) {
+            el.classList.toggle('selected');
+        }
+        
+        // ========== 商城相关 ==========
+        function initShop() {
+            document.getElementById('product-list').innerHTML = products.map(prod => `
+                <div class="product-card">
+                    <div class="product-img">${prod.icon}</div>
+                    <div class="product-info">
+                        <div class="product-title">${prod.title}</div>
+                        <div>
+                            <span class="product-price">${prod.price}</span>
+                            <span class="product-sales">已售${prod.sales}</span>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn-add-cart" onclick="addToCart(${prod.id})">加入购物车</button>
+                            <button class="btn-buy-now" onclick="showToast('跳转到支付页面')">立即购买</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function addToCart(productId) {
+            state.cartCount++;
+            document.getElementById('cart-count').textContent = state.cartCount;
+            showToast('已加入购物车');
+        }
+        
+        // ========== 订单相关 ==========
+        function initOrders(status = 'all') {
+            const filtered = status === 'all' ? orders : orders.filter(o => o.status === status);
+            
+            if (filtered.length === 0) {
+                document.getElementById('order-list').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📦</div>
+                        <div class="empty-text">暂无订单</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            document.getElementById('order-list').innerHTML = filtered.map(order => `
+                <div class="order-card">
+                    <div class="order-header">
+                        <span>订单号：${order.id}</span>
+                        <span class="order-status">${getOrderStatus(order.status)}</span>
+                    </div>
+                    <div class="order-body">
+                        <div class="order-img">${order.icon}</div>
+                        <div class="order-info">
+                            <div class="order-title">${order.title}</div>
+                            <div class="order-spec">${order.date}</div>
+                        </div>
+                    </div>
+                    <div class="order-footer">
+                        <div class="order-price">¥${order.price}</div>
+                        ${order.status === 'pending' ? '<button class="btn-order-action" onclick="showToast(\'请去支付\')">去支付</button>' : ''}
+                        ${order.status === 'paid' ? '<button class="btn-order-action" onclick="showToast(\'催发货\')">催发货</button>' : ''}
+                        ${order.status === 'completed' ? '<button class="btn-order-action" onclick="showToast(\'查看物流\')">查看物流</button>' : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function getOrderStatus(status) {
+            const map = { pending: '待支付', paid: '已支付', shipped: '已发货', completed: '已完成' };
+            return map[status] || status;
+        }
+        
+        function filterOrders(status) {
+            document.querySelectorAll('.order-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.status === status);
+            });
+            initOrders(status);
+        }
+        
+        // ========== 活动相关 ==========
+        function initActivities() {
+            document.getElementById('activity-list').innerHTML = activities.map(act => {
+                const percentage = Math.round((act.registered / act.total) * 100);
+                return `
+                    <div class="activity-card">
+                        <div class="activity-cover ${act.type}">${act.icon}</div>
+                        <div class="activity-content">
+                            <div class="activity-title">${act.title}</div>
+                            <div class="activity-meta">
+                                <div class="activity-meta-item">📅 ${act.date} ${act.time}</div>
+                                <div class="activity-meta-item">📍 ${act.location}</div>
+                                <div class="activity-meta-item">📝 ${act.content}</div>
+                            </div>
+                            <div class="activity-progress">
+                                <div class="progress-info">
+                                    <span>报名进度</span>
+                                    <span>${act.registered}/${act.total}人</span>
+                                </div>
+                                <div class="activity-bar">
+                                    <div class="activity-bar-fill" style="width: ${percentage}%"></div>
+                                </div>
+                            </div>
+                            <button class="btn-signup" ${percentage >= 100 ? 'disabled' : ''} onclick="signupActivity(${act.id})">
+                                ${percentage >= 100 ? '名额已满' : '立即报名'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function signupActivity(activityId) {
+            state.currentActivity = activities.find(a => a.id === activityId);
+            showModal('活动报名', `确定报名参加「${state.currentActivity.title}」吗？`, '🎯', true);
+            document.querySelector('.modal-btn-confirm').onclick = () => {
+                closeModal();
+                showToast('报名成功！');
+            };
+        }
+        
+        function initActivityDetail(id) {
+            const act = activities.find(a => a.id === id) || activities[0];
+            const percentage = Math.round((act.registered / act.total) * 100);
+            
+            document.getElementById('activity-detail-content').innerHTML = `
+                <div class="course-detail-cover activity-cover ${act.type}">${act.icon}</div>
+                <div class="course-detail-info">
+                    <div class="course-detail-title">${act.title}</div>
+                    <div class="course-detail-meta">
+                        <span>📅 ${act.date} ${act.time}</span>
+                    </div>
+                    <div class="course-detail-meta">
+                        <span>📍 ${act.location}</span>
+                    </div>
+                    <div class="section-title" style="margin-top: 20px;">活动内容</div>
+                    <div class="course-detail-desc">${act.content}</div>
+                    <div class="section-title" style="margin-top: 20px;">报名情况</div>
+                    <div class="activity-progress">
+                        <div class="progress-info">
+                            <span>已报名</span>
+                            <span>${act.registered}/${act.total}人</span>
+                        </div>
+                        <div class="activity-bar">
+                            <div class="activity-bar-fill" style="width: ${percentage}%"></div>
+                        </div>
+                    </div>
+                    <button class="btn-primary" style="margin-top: 20px;" onclick="signupActivity(${act.id})">立即报名</button>
+                </div>
+            `;
+        }
+        
+        // ========== 会员相关 ==========
+        function initVip() {
+            const btn = document.getElementById('vip-buy-btn');
+            if (state.user.vip) {
+                btn.textContent = '已是年度会员';
+                btn.disabled = true;
+                btn.style.background = '#ccc';
+            } else {
+                btn.textContent = '立即开通年度会员';
+            }
+        }
+        
+        function selectVipPlan(plan) {
+            state.selectedVipPlan = plan;
+            document.querySelectorAll('.vip-plan').forEach(p => p.classList.remove('popular'));
+            event.currentTarget.classList.add('popular');
+            
+            const btn = document.getElementById('vip-buy-btn');
+            btn.textContent = plan === 'yearly' ? '立即开通年度会员' : '立即开通月度会员';
+        }
+        
+        function buyVip() {
+            if (state.user.vip) return;
+            
+            showModal('确认开通', `确定开通${state.selectedVipPlan === 'yearly' ? '年度' : '月度'}会员吗？`, '👑', true);
+            document.querySelector('.modal-btn-confirm').onclick = () => {
+                closeModal();
+                state.user.vip = true;
+                document.getElementById('profile-vip').innerHTML = '👑 年度会员';
+                showToast('开通成功！');
+                setTimeout(() => router.navigate('profile'), 1500);
+            };
+        }
+        
+        // ========== 初始化 ==========
+        document.addEventListener('DOMContentLoaded', () => {
+            router.init();
+            
+            // 默认显示首页（如果未登录则显示登录页）
+            if (!state.isLoggedIn) {
+                // 可以选择显示登录页或首页
+                // router.navigate('auth');
+            }
+        });
+    </script>
+</body>
+</html>
