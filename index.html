@@ -338,7 +338,17 @@
             box-shadow: var(--shadow);
         }
         
-        .function-icon {
+   .function-tag {
+            display: inline-block;
+            font-size: 10px;
+            padding: 2px 6px;
+            background: #7C4DFF;
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 6px;
+        }
+        
+             .function-icon {
             font-size: 22px;
             margin-bottom: 6px;
         }
@@ -2853,16 +2863,813 @@
             margin-right: 6px;
         }
         
+        /* ========== AI舌诊页面样式 ========== */
+        .tongue-detection-container {
+            padding: 16px;
+        }
+        
+        .tongue-upload-area {
+            background: white;
+            border: 2px dashed #FFE0B2;
+            border-radius: var(--radius);
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 16px;
+        }
+        
+        .tongue-upload-area:hover {
+            border-color: #FF9800;
+            background: #FFF3E0;
+        }
+        
+        .tongue-upload-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+        
+        .tongue-upload-text {
+            font-size: 14px;
+            color: var(--text-gray);
+            margin-bottom: 8px;
+        }
+        
+        .tongue-upload-hint {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+        
+        .tongue-preview-area {
+            background: white;
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+        }
+        
+        .tongue-preview-image {
+            width: 100%;
+            max-height: 250px;
+            object-fit: cover;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .tongue-preview-image.show {
+            display: block;
+        }
+        
+        .tongue-preview-placeholder {
+            height: 150px;
+            background: var(--bg-gray);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+        }
+        
+        .tongue-preview-placeholder.hidden {
+            display: none;
+        }
+        
+        .tongue-tip-input {
+            background: white;
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+        }
+        
+        .btn-tongue-detect {
+            width: 100%;
+            padding: 14px;
+            background: #FF9800;
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-tongue-detect:active {
+            opacity: 0.9;
+        }
+        
+        .btn-tongue-detect:disabled {
+            opacity: 0.6;
+        }
+        
+        .btn-tongue-detect .loading-icon {
+            display: none;
+        }
+        
+        .btn-tongue-detect.loading .loading-icon {
+            display: inline-block;
+            animation: spin 1s linear infinite;
+        }
+        
+        /* 舌诊结果样式 */
+        .tongue-result {
+            background: white;
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+        }
+        
+        .tongue-result-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .tongue-result-icon {
+            width: 50px;
+            height: 50px;
+            background: #FFF3E0;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .tongue-feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        
+        .tongue-feature-item {
+            background: #FFF8E1;
+            border-radius: 10px;
+            padding: 12px;
+        }
+        
+        .tongue-feature-label {
+            font-size: 11px;
+            color: #795548;
+            margin-bottom: 4px;
+        }
+        
+        .tongue-feature-value {
+            font-size: 15px;
+            font-weight: 600;
+            color: #E65100;
+        }
+        
+        .tongue-feature-desc {
+            font-size: 11px;
+            color: var(--text-gray);
+            margin-top: 4px;
+        }
+        
+        .tongue-constitution-badge {
+            background: linear-gradient(135deg, #FF9800, #F57C00);
+            color: white;
+            padding: 16px 20px;
+            border-radius: var(--radius);
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        
+        .tongue-constitution-main {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .tongue-constitution-sub {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+        
+        .tongue-analysis-text {
+            background: #FFF3E0;
+            border-radius: 8px;
+            padding: 14px;
+            font-size: 14px;
+            color: #5D4037;
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+        
+        .tongue-suggestions {
+            margin-top: 16px;
+        }
+        
+        .tongue-suggestion-item {
+            display: flex;
+            gap: 12px;
+            padding: 14px;
+            background: var(--bg-gray);
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .tongue-suggestion-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .tongue-suggestion-icon {
+            width: 40px;
+            height: 40px;
+            background: #FFF3E0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        
+        .tongue-suggestion-content {
+            flex: 1;
+        }
+        
+        .tongue-suggestion-type {
+            font-size: 13px;
+            font-weight: 600;
+            color: #E65100;
+            margin-bottom: 4px;
+        }
+        
+        .tongue-suggestion-text {
+            font-size: 12px;
+            color: var(--text-gray);
+            line-height: 1.5;
+        }
+        
+        .tongue-disclaimer {
+            background: #FFF3E0;
+            border: 1px solid #FFE0B2;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 16px;
+            font-size: 12px;
+            color: #E65100;
+            text-align: center;
+        }
+        
         /* ========== 隐藏类 ========== */
         .hidden {
             display: none !important;
         }
-    </style>
+    /* ========== 健康咨询样式 ========== */
+        .health-advisory-banner {
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #90CAF9;
+        }
+        
+        .health-advisory-banner:active {
+            transform: scale(0.98);
+            opacity: 0.9;
+        }
+        
+        .advisory-icon {
+            font-size: 32px;
+            margin-right: 12px;
+        }
+        
+        .advisory-content {
+            flex: 1;
+        }
+        
+        .advisory-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1565C0;
+            margin-bottom: 2px;
+        }
+        
+        .advisory-desc {
+            font-size: 12px;
+            color: #42A5F5;
+        }
+        
+        .advisory-arrow {
+            font-size: 24px;
+            color: #90CAF9;
+        }
+        
+        /* 健康咨询页面 */
+        .advisory-container {
+            padding: 16px;
+        }
+        
+        .advisory-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+        }
+        
+        .advisory-card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .advisory-question {
+            margin-bottom: 16px;
+        }
+        
+        .advisory-question:last-of-type {
+            margin-bottom: 0;
+        }
+        
+        .question-title {
+            font-size: 14px;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .question-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+        
+        .question-option {
+            padding: 10px 8px;
+            background: var(--bg-gray);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-gray);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .question-option:active {
+            transform: scale(0.97);
+        }
+        
+        .question-option.selected {
+            background: #E3F2FD;
+            border-color: #2196F3;
+            color: #1565C0;
+            font-weight: 500;
+        }
+        
+        /* 图片上传区域 */
+        .advisory-upload {
+            margin-top: 16px;
+        }
+        
+        .upload-label {
+            font-size: 14px;
+            color: var(--text-gray);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .upload-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 16px;
+            background: var(--bg-gray);
+            border: 1px dashed #BDBDBD;
+            border-radius: 8px;
+            font-size: 13px;
+            color: var(--text-gray);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .upload-btn:hover {
+            border-color: #2196F3;
+            color: #2196F3;
+        }
+        
+        .upload-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 12px;
+        }
+        
+        .upload-preview-item {
+            position: relative;
+            width: 70px;
+            height: 70px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .upload-preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .upload-preview-item .delete-btn {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            width: 20px;
+            height: 20px;
+            background: rgba(0,0,0,0.6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: white;
+            cursor: pointer;
+        }
+        
+        /* 提交按钮 */
+        .btn-advisory-submit {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #2196F3, #1976D2);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 16px;
+        }
+        
+        .btn-advisory-submit:active {
+            opacity: 0.9;
+        }
+        
+        /* 结果展示 */
+        .advisory-result {
+            margin-top: 20px;
+        }
+        
+        .result-header {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+            border-radius: var(--radius);
+            margin-bottom: 16px;
+        }
+        
+        .result-header .result-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        
+        .result-header .result-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1565C0;
+        }
+        
+        .result-item {
+            background: white;
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: var(--shadow);
+        }
+        
+        .result-item-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1976D2;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .result-item-content {
+            font-size: 14px;
+            color: var(--text-gray);
+            line-height: 1.7;
+        }
+        
+        .result-item.overall {
+            background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+            border: 1px solid #A5D6A7;
+        }
+        
+        .result-item.overall .result-item-title {
+            color: #2E7D32;
+        }
+        
+        .result-item.overall .result-item-content {
+            color: #388E3C;
+        }
+        
+        .result-course-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background: #E3F2FD;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #1565C0;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        
+        .btn-save-advice {
+            width: 100%;
+            padding: 12px;
+            background: white;
+            color: #1976D2;
+            border: 2px solid #2196F3;
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 16px;
+        }
+        
+        .advisory-disclaimer {
+            text-align: center;
+            padding: 16px;
+            font-size: 12px;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* ========== 肩部放松监测样式 ========== */
+        .shoulder-container {
+            padding: 16px;
+        }
+        
+        .camera-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto 20px;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            background: #1a1a2e;
+            aspect-ratio: 4/3;
+        }
+        
+        .camera-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(-1);
+        }
+        
+        .camera-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(98, 21, 255, 0.85);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .camera-overlay .overlay-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+        
+        .camera-overlay .overlay-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .camera-overlay .overlay-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        .camera-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .camera-placeholder .placeholder-icon {
+            font-size: 80px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+        
+        .camera-placeholder .placeholder-text {
+            font-size: 14px;
+            opacity: 0.7;
+        }
+        
+        .shoulder-feature-info {
+            background: white;
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+        }
+        
+        .shoulder-feature-info h3 {
+            font-size: 16px;
+            color: #651FFF;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .shoulder-feature-info p {
+            font-size: 14px;
+            color: var(--text-gray);
+            line-height: 1.8;
+            margin-bottom: 8px;
+        }
+        
+        .shoulder-feature-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 16px;
+        }
+        
+        .shoulder-feature-item {
+            background: #FAFAFA;
+            border-radius: 8px;
+            padding: 14px;
+            text-align: center;
+        }
+        
+        .shoulder-feature-item .item-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        
+        .shoulder-feature-item .item-title {
+            font-size: 13px;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+        
+        .btn-camera-start {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #7C4DFF, #651FFF);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            transition: all 0.3s;
+        }
+        
+        .btn-camera-start:hover {
+            background: linear-gradient(135deg, #651FFF, #7C4DFF);
+            transform: translateY(-1px);
+        }
+        
+        .btn-camera-stop {
+            width: 100%;
+            padding: 14px;
+            background: white;
+            color: #7C4DFF;
+            border: 2px solid #7C4DFF;
+            border-radius: var(--radius);
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            display: none;
+        }
+        
+        .btn-camera-stop.show {
+            display: block;
+        }
+        
+        .shoulder-timeline {
+            background: white;
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-top: 16px;
+            box-shadow: var(--shadow);
+        }
+        
+        .shoulder-timeline h3 {
+            font-size: 16px;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .timeline-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding-bottom: 16px;
+            border-left: 2px solid #EDE7F6;
+            margin-left: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .timeline-item:last-child {
+            border-left: none;
+            padding-bottom: 0;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 0;
+            width: 10px;
+            height: 10px;
+            background: #7C4DFF;
+            border-radius: 50%;
+        }
+        
+        .timeline-item .time {
+            font-size: 12px;
+            color: #7C4DFF;
+            font-weight: 500;
+            min-width: 60px;
+        }
+        
+        .timeline-item .desc {
+            font-size: 14px;
+            color: var(--text-gray);
+            line-height: 1.6;
+        }
+        
+        .shoulder-disclaimer {
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+            color: var(--text-light);
+            line-height: 1.8;
+        }
+
+        </style>
 </head>
 <body>
     <!-- 开屏遮罩 -->
-    <div id="splash-screen" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #4DAB7A; z-index: 9999; display: flex; justify-content: center; align-items: center; cursor: pointer;">
-        <img src="poster.jpg" style="max-width: 100%; max-height: 100%; object-fit: contain;" onerror="this.style.display='none'">
+    <div id="splash-screen" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #4DAB7A; z-index: 9999; display: flex; justify-content: center; align-items: center; cursor: pointer; flex-direction: column;">
+        <img id="splash-img" src="splash.jpg" style="max-width: 90%; max-height: 80%; object-fit: contain;" onerror="this.style.display='none'">
+        <div style="margin-top: 20px; color: white; font-size: 28px; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">青岐复元</div>
+        <div style="margin-top: 8px; color: rgba(255,255,255,0.9); font-size: 14px;">头颈一体中医快干预平台</div>
         <div style="position: absolute; bottom: 30px; color: white; font-size: 14px; opacity: 0.8;">点击任意处跳过</div>
     </div>
     
@@ -2920,7 +3727,7 @@
             </div>
             
             <div class="content">
-                <!-- AI头皮检测入口 -->
+                <!-- AI智能服务入口 -->
                 <div class="section">
                     <div class="section-title">AI智能服务</div>
                     <div class="function-grid" style="grid-template-columns: repeat(2, 1fr);">
@@ -2928,9 +3735,14 @@
                             <div class="function-icon" style="font-size: 24px;">AI</div>
                             <div class="function-name" style="color: var(--primary-dark);">AI头皮检测</div>
                         </div>
-                        <div class="function-card" onclick="router.navigate('courses')">
-                            <div class="function-icon">课程</div>
-                            <div class="function-name">干预课程</div>
+                        <div class="function-card" onclick="router.navigate('ai-tongue')" style="background: #FFF3E0; border-color: #FF9800;">
+                            <div class="function-icon" style="font-size: 24px; color: #FF9800;">👅</div>
+                            <div class="function-name" style="color: #E65100;">AI舌诊</div>
+                        </div>
+                        <div class="function-card" onclick="router.navigate('ai-shoulder')" style="background: #EDE7F6; border-color: #7C4DFF;">
+                            <div class="function-tag">验证中</div>
+                            <div class="function-icon" style="font-size: 24px; color: #7C4DFF;">🦴</div>
+                            <div class="function-name" style="color: #651FFF;">肩部放松监测</div>
                         </div>
                     </div>
                 </div>
@@ -3556,6 +4368,16 @@
                 </div>
             </div>
             
+            <!-- 健康咨询入口 -->
+            <div class="health-advisory-banner" onclick="router.navigate('health-advisory')">
+                <div class="advisory-icon">💬</div>
+                <div class="advisory-content">
+                    <div class="advisory-title">健康咨询</div>
+                    <div class="advisory-desc">回答问题，获取个性化健康建议</div>
+                </div>
+                <div class="advisory-arrow">›</div>
+            </div>
+            
             <div class="calendar-container">
                 <div class="calendar-header">
                     <div class="calendar-title" id="calendar-title">2024年3月</div>
@@ -4096,10 +4918,286 @@
                 </div>
             </div>
         </div>
+        
+        <!-- ========== AI舌诊页 ========== -->
+        <div id="page-ai-tongue" class="page">
+            <div class="header">
+                <div class="header-back" onclick="router.navigate('home')">←</div>
+                <div class="header-title">AI舌诊</div>
+            </div>
+            
+            <div class="tongue-detection-container" id="tongue-container">
+                <!-- 上传区域 -->
+                <div class="tongue-upload-area" id="tongue-upload-area" onclick="document.getElementById('tongue-file-input').click()">
+                    <input type="file" id="tongue-file-input" accept="image/*" style="display: none;" onchange="handleTongueFileSelect(event)">
+                    <div class="tongue-upload-icon">👅</div>
+                    <div class="tongue-upload-text">点击上传舌象照片</div>
+                    <div class="tongue-upload-hint">请在自然光下拍摄，舌头自然伸出</div>
+                </div>
+                
+                <!-- 预览区域 -->
+                <div class="tongue-preview-area">
+                    <img id="tongue-preview-image" class="tongue-preview-image" alt="舌象预览">
+                    <div class="tongue-preview-placeholder" id="tongue-preview-placeholder">
+                        <span>尚未上传舌象照片</span>
+                    </div>
+                </div>
+                
+                <!-- 补充描述 -->
+                <div class="tongue-tip-input">
+                    <div class="form-label">补充描述您的身体感受（选填）</div>
+                    <textarea class="symptom-textarea" id="tongue-tip-desc" placeholder="例如：最近胃口不太好，大便偏稀，睡眠一般，容易疲劳..."></textarea>
+                </div>
+                
+                <!-- 检测按钮 -->
+                <button class="btn-tongue-detect" id="tongue-detect-btn" onclick="startTongueDetection()">
+                    <span class="loading-icon">⏳</span>
+                    <span id="tongue-detect-btn-text">🔍 开始AI舌诊</span>
+                </button>
+                
+                <!-- 检测结果区域 -->
+                <div id="tongue-result" class="hidden">
+                    <!-- 动态渲染 -->
+                </div>
+                
+                <!-- 免责声明 -->
+                <div class="tongue-disclaimer">
+                    AI舌诊结果仅供参考，如有不适请咨询专业医师
+                </div>
+            </div>
+            
+            <div class="bottom-nav">
+                <div class="nav-item" onclick="router.navigate('home')">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-text">首页</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('courses')">
+                    <span class="nav-icon">🎬</span>
+                    <span class="nav-text">课程</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('checkin')">
+                    <span class="nav-icon">📅</span>
+                    <span class="nav-text">打卡</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('shop')">
+                    <span class="nav-icon">🛒</span>
+                    <span class="nav-text">商城</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('profile')">
+                    <span class="nav-icon">👤</span>
+                    <span class="nav-text">我的</span>
+                </div>
+            </div>
+        </div>
     </div>
     
     <!-- 通用弹窗 -->
-    <div class="modal-overlay" id="modal">
+    
+        <!-- 肩部放松监测页面 -->
+        
+        <!-- 健康咨询页面 -->
+        <div id="page-health-advisory" class="page">
+            <div class="header" style="background: linear-gradient(135deg, #2196F3, #1976D2);">
+                <div class="header-back" onclick="router.navigate('checkin')">←</div>
+                <div class="header-title">健康咨询</div>
+            </div>
+            
+            <div class="advisory-container">
+                <!-- 问题区域 -->
+                <div class="advisory-card">
+                    <div class="advisory-card-title">📋 请回答以下问题</div>
+                    
+                    <!-- 问题1 -->
+                    <div class="advisory-question">
+                        <div class="question-title">1. 今天几点上床休息（息屏状态）？</div>
+                        <div class="question-options" data-q="sleep">
+                            <div class="question-option" onclick="selectOption(this, 'sleep', '22点前')">22点前</div>
+                            <div class="question-option" onclick="selectOption(this, 'sleep', '22-23点')">22-23点</div>
+                            <div class="question-option" onclick="selectOption(this, 'sleep', '23-24点')">23-24点</div>
+                            <div class="question-option" onclick="selectOption(this, 'sleep', '24点后')">24点后</div>
+                        </div>
+                    </div>
+                    
+                    <!-- 问题2 -->
+                    <div class="advisory-question">
+                        <div class="question-title">2. 今天久坐时间多长？</div>
+                        <div class="question-options" data-q="sitting">
+                            <div class="question-option" onclick="selectOption(this, 'sitting', '2小时以内')">2小时以内</div>
+                            <div class="question-option" onclick="selectOption(this, 'sitting', '2-4小时')">2-4小时</div>
+                            <div class="question-option" onclick="selectOption(this, 'sitting', '4-6小时')">4-6小时</div>
+                            <div class="question-option" onclick="selectOption(this, 'sitting', '6小时以上')">6小时以上</div>
+                        </div>
+                    </div>
+                    
+                    <!-- 问题3 -->
+                    <div class="advisory-question">
+                        <div class="question-title">3. 今天站立/活动次数？</div>
+                        <div class="question-options" data-q="standing">
+                            <div class="question-option" onclick="selectOption(this, 'standing', '基本没动')">基本没动</div>
+                            <div class="question-option" onclick="selectOption(this, 'standing', '1-2次')">1-2次</div>
+                            <div class="question-option" onclick="selectOption(this, 'standing', '3-5次')">3-5次</div>
+                            <div class="question-option" onclick="selectOption(this, 'standing', '5次以上')">5次以上</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 数据上传区域 -->
+                <div class="advisory-card advisory-upload">
+                    <div class="upload-label">📎 上传您的健康数据截图（可选）</div>
+                    <div class="upload-btn" onclick="document.getElementById('advisory-file-input').click()">
+                        <span>+ 上传图片</span>
+                    </div>
+                    <input type="file" id="advisory-file-input" accept="image/*" multiple style="display: none;" onchange="handleAdvisoryFileSelect(event)">
+                    <div class="upload-preview" id="advisory-upload-preview"></div>
+                </div>
+                
+                <!-- 提交按钮 -->
+                <button class="btn-advisory-submit" onclick="submitAdvisory()">
+                    💡 获取健康建议
+                </button>
+                
+                <!-- 结果展示区域 -->
+                <div id="advisory-result" class="advisory-result" style="display: none;">
+                    <!-- 动态渲染 -->
+                </div>
+                
+                <!-- 免责声明 -->
+                <div class="advisory-disclaimer">
+                    健康建议仅供参考<br>
+                    不能替代专业的医疗诊断和指导<br>
+                    如有身体不适，请及时咨询专业医师
+                </div>
+            </div>
+            
+            <div class="bottom-nav">
+                <div class="nav-item" onclick="router.navigate('home')">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-text">首页</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('courses')">
+                    <span class="nav-icon">🎬</span>
+                    <span class="nav-text">课程</span>
+                </div>
+                <div class="nav-item active" onclick="router.navigate('checkin')">
+                    <span class="nav-icon">📅</span>
+                    <span class="nav-text">打卡</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('shop')">
+                    <span class="nav-icon">🛒</span>
+                    <span class="nav-text">商城</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('profile')">
+                    <span class="nav-icon">👤</span>
+                    <span class="nav-text">我的</span>
+                </div>
+            </div>
+        </div>
+        <div id="page-ai-shoulder" class="page">
+            <div class="header" style="background: linear-gradient(135deg, #7C4DFF, #651FFF);">
+                <div class="header-back" onclick="router.navigate('home')">←</div>
+                <div class="header-title">肩部放松监测</div>
+            </div>
+            
+            <div class="shoulder-container">
+                <!-- 摄像头预览区域 -->
+                <div class="camera-container" id="shoulder-camera-container">
+                    <video id="shoulder-video" class="camera-video" autoplay playsinline></video>
+                    
+                    <!-- 摄像头占位 -->
+                    <div class="camera-placeholder" id="shoulder-placeholder">
+                        <div class="placeholder-icon">📷</div>
+                        <div class="placeholder-text">点击下方按钮开启摄像头</div>
+                    </div>
+                    
+                    <!-- 功能验证中遮罩 -->
+                    <div class="camera-overlay" id="shoulder-overlay" style="display: none;">
+                        <div class="overlay-icon">🔬</div>
+                        <div class="overlay-title">AI姿态识别功能</div>
+                        <div class="overlay-subtitle">正在验证中，敬请期待<br>本功能将通过AI实时识别您的肩部放松动作<br>帮助您纠正动作，达到更好的放松效果</div>
+                    </div>
+                </div>
+                
+                <!-- 功能说明 -->
+                <div class="shoulder-feature-info">
+                    <h3>🔍 功能介绍</h3>
+                    <p>肩部放松监测是基于AI姿态识别技术的智能放松指导功能。通过摄像头实时捕捉您的动作姿态，智能分析肩颈放松程度，提供专业的动作纠正建议。</p>
+                    <div class="shoulder-feature-list">
+                        <div class="shoulder-feature-item">
+                            <div class="item-icon">📊</div>
+                            <div class="item-title">实时监测</div>
+                        </div>
+                        <div class="shoulder-feature-item">
+                            <div class="item-icon">🎯</div>
+                            <div class="item-title">动作纠正</div>
+                        </div>
+                        <div class="shoulder-feature-item">
+                            <div class="item-icon">📈</div>
+                            <div class="item-title">效果评估</div>
+                        </div>
+                        <div class="shoulder-feature-item">
+                            <div class="item-icon">📱</div>
+                            <div class="item-title">随时使用</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 上线时间线 -->
+                <div class="shoulder-timeline">
+                    <h3>📅 开发计划</h3>
+                    <div class="timeline-item">
+                        <div class="time">已完成</div>
+                        <div class="desc">核心算法研发与测试</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">Q2 2026</div>
+                        <div class="desc">内测版本上线，邀请部分用户体验</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">Q3 2026</div>
+                        <div class="desc">正式版发布，全量开放</div>
+                    </div>
+                </div>
+                
+                <!-- 按钮组 -->
+                <button class="btn-camera-start" id="btn-start-camera" onclick="startShoulderCamera()">
+                    📷 开启摄像头
+                </button>
+                <button class="btn-camera-stop" id="btn-stop-camera" onclick="stopShoulderCamera()">
+                    ✕ 关闭摄像头
+                </button>
+                
+                <!-- 免责声明 -->
+                <div class="shoulder-disclaimer">
+                    AI姿态识别结果仅供参考<br>
+                    不能替代专业的医疗诊断和指导<br>
+                    如有严重肩颈不适，请及时就医
+                </div>
+            </div>
+            
+            <div class="bottom-nav">
+                <div class="nav-item" onclick="router.navigate('home')">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-text">首页</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('courses')">
+                    <span class="nav-icon">🎬</span>
+                    <span class="nav-text">课程</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('checkin')">
+                    <span class="nav-icon">📅</span>
+                    <span class="nav-text">打卡</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('shop')">
+                    <span class="nav-icon">🛒</span>
+                    <span class="nav-text">商城</span>
+                </div>
+                <div class="nav-item" onclick="router.navigate('profile')">
+                    <span class="nav-icon">👤</span>
+                    <span class="nav-text">我的</span>
+                </div>
+            </div>
+        </div>
+        <div class="modal-overlay" id="modal">
         <div class="modal">
             <div class="modal-header">
                 <div class="modal-title" id="modal-title">提示</div>
@@ -4134,7 +5232,276 @@
             selectedVipPlan: 'yearly',
             currentActivity: null
         };
+
         
+        // ========== 肩部监测相关 ==========
+        let shoulderStream = null;
+        
+        // ========== 健康咨询相关 ==========
+        const advisoryState = {
+            sleep: null,
+            sitting: null,
+            standing: null,
+            uploads: []
+        };
+        
+        function initHealthAdvisory() {
+            // 重置状态
+            advisoryState.sleep = null;
+            advisoryState.sitting = null;
+            advisoryState.standing = null;
+            advisoryState.uploads = [];
+            
+            // 清除选项选中状态
+            document.querySelectorAll('.question-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // 清除上传预览
+            document.getElementById('advisory-upload-preview').innerHTML = '';
+            
+            // 隐藏结果
+            document.getElementById('advisory-result').style.display = 'none';
+        }
+        
+        function selectOption(el, question, value) {
+            // 取消同组其他选项
+            const group = el.parentElement;
+            group.querySelectorAll('.question-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // 选中当前选项
+            el.classList.add('selected');
+            
+            // 保存状态
+            advisoryState[question] = value;
+        }
+        
+        function handleAdvisoryFileSelect(event) {
+            const files = event.target.files;
+            const preview = document.getElementById('advisory-upload-preview');
+            
+            for (let file of files) {
+                if (advisoryState.uploads.length >= 6) {
+                    showToast('最多上传6张图片');
+                    break;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const index = advisoryState.uploads.length;
+                    advisoryState.uploads.push(e.target.result);
+                    
+                    const item = document.createElement('div');
+                    item.className = 'upload-preview-item';
+                    item.innerHTML = `
+                        <img src="${e.target.result}" alt="预览">
+                        <div class="delete-btn" onclick="removeAdvisoryImage(${index})">×</div>
+                    `;
+                    preview.appendChild(item);
+                };
+                reader.readAsDataURL(file);
+            }
+            
+            // 清空input以便重新选择同一张图片
+            event.target.value = '';
+        }
+        
+        function removeAdvisoryImage(index) {
+            advisoryState.uploads.splice(index, 1);
+            renderAdvisoryPreview();
+        }
+        
+        function renderAdvisoryPreview() {
+            const preview = document.getElementById('advisory-upload-preview');
+            preview.innerHTML = '';
+            
+            advisoryState.uploads.forEach((data, index) => {
+                const item = document.createElement('div');
+                item.className = 'upload-preview-item';
+                item.innerHTML = `
+                    <img src="${data}" alt="预览">
+                    <div class="delete-btn" onclick="removeAdvisoryImage(${index})">×</div>
+                `;
+                preview.appendChild(item);
+            });
+        }
+        
+        function submitAdvisory() {
+            // 检查是否回答了所有问题
+            if (!advisoryState.sleep || !advisoryState.sitting || !advisoryState.standing) {
+                showToast('请回答所有问题');
+                return;
+            }
+            
+            // 模拟处理
+            const suggestions = {
+                sleep: {
+                    '22点前': '您的作息时间很健康，建议保持规律睡眠，避免过度熬夜。',
+                    '22-23点': '作息时间较为合理，建议继续保持，睡前避免使用电子设备。',
+                    '23-24点': '入睡时间稍晚，建议提前半小时上床休息，养成良好的睡眠习惯。',
+                    '24点后': '入睡时间过晚，长期熬夜会影响身体机能，建议调整作息，早睡早起。'
+                },
+                sitting: {
+                    '2小时以内': '久坐时间控制得很好，继续保持，适量运动有益健康。',
+                    '2-4小时': '久坐时间适中，建议每隔1小时起身活动5分钟，做些简单的伸展运动。',
+                    '4-6小时': '久坐时间较长，建议每45分钟起身活动，做颈椎放松操和腰部拉伸。',
+                    '6小时以上': '久坐时间过长，建议设置定时提醒，每小时起身活动5分钟，可尝试站立办公。'
+                },
+                standing: {
+                    '基本没动': '活动量不足，建议每30分钟起身一次，做简单拉伸或走动。',
+                    '1-2次': '活动量偏少，建议增加起身频率，适当增加步行活动。',
+                    '3-5次': '活动量适中，继续保持，配合适度运动效果更佳。',
+                    '5次以上': '活动量充足，很好的习惯！注意运动强度适中，避免过度疲劳。'
+                }
+            };
+            
+            const sleepAdvice = suggestions.sleep[advisoryState.sleep];
+            const sittingAdvice = suggestions.sitting[advisoryState.sitting];
+            const standingAdvice = suggestions.standing[advisoryState.standing];
+            
+            // 生成综合建议
+            let overallAdvice = '根据您今日的健康数据，建议：\n\n';
+            
+            // 睡眠建议
+            if (advisoryState.sleep === '23-24点' || advisoryState.sleep === '24点后') {
+                overallAdvice += '• 调整作息时间，尽量在23点前入睡\n';
+            } else {
+                overallAdvice += '• 保持良好作息习惯\n';
+            }
+            
+            // 久坐建议
+            if (advisoryState.sitting === '4-6小时' || advisoryState.sitting === '6小时以上') {
+                overallAdvice += '• 每工作45分钟起身活动5分钟\n';
+            } else {
+                overallAdvice += '• 继续保持适度的活动习惯\n';
+            }
+            
+            // 活动建议
+            if (advisoryState.standing === '基本没动' || advisoryState.standing === '1-2次') {
+                overallAdvice += '• 增加日常活动量，每天步行8000步以上\n';
+            }
+            
+            overallAdvice += '\n坚持健康的生活方式，让身体保持最佳状态！';
+            
+            // 渲染结果
+            const resultHtml = `
+                <div class="result-header">
+                    <div class="result-icon">✅</div>
+                    <div class="result-title">健康建议已生成</div>
+                </div>
+                
+                <div class="result-item">
+                    <div class="result-item-title">😴 睡眠作息建议</div>
+                    <div class="result-item-content">${sleepAdvice}</div>
+                </div>
+                
+                <div class="result-item">
+                    <div class="result-item-title">🪑 久坐提醒建议</div>
+                    <div class="result-item-content">${sittingAdvice}</div>
+                </div>
+                
+                <div class="result-item">
+                    <div class="result-item-title">🚶 活动量建议</div>
+                    <div class="result-item-content">${standingAdvice}</div>
+                </div>
+                
+                <div class="result-item overall">
+                    <div class="result-item-title">📋 综合健康建议</div>
+                    <div class="result-item-content">${overallAdvice.replace(/\n/g, '<br>')}</div>
+                </div>
+                
+                <div class="result-item">
+                    <div class="result-item-title">🎯 推荐课程</div>
+                    <div class="result-item-content">
+                        根据您的情况，为您推荐以下课程：
+                        <div class="result-course-link" onclick="router.navigate('courses')">
+                            📺 查看全部课程
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn-save-advice" onclick="saveAdvisoryAdvice()">
+                    💾 保存建议
+                </button>
+            `;
+            
+            document.getElementById('advisory-result').innerHTML = resultHtml;
+            document.getElementById('advisory-result').style.display = 'block';
+            
+            // 滚动到结果区域
+            setTimeout(() => {
+                document.getElementById('advisory-result').scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+        }
+        
+        function saveAdvisoryAdvice() {
+            showToast('建议已保存');
+        }
+
+        function initAiShoulder() {
+            // 初始化肩部监测页面
+            stopShoulderCamera();
+        }
+        
+        async function startShoulderCamera() {
+            const video = document.getElementById('shoulder-video');
+            const placeholder = document.getElementById('shoulder-placeholder');
+            const overlay = document.getElementById('shoulder-overlay');
+            const btnStart = document.getElementById('btn-start-camera');
+            const btnStop = document.getElementById('btn-stop-camera');
+            
+            try {
+                // 请求摄像头权限
+                shoulderStream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        facingMode: 'user',
+                        width: { ideal: 640 },
+                        height: { ideal: 480 }
+                    }
+                });
+                
+                // 显示视频流
+                video.srcObject = shoulderStream;
+                await video.play();
+                
+                // 隐藏占位符，显示遮罩
+                placeholder.style.display = 'none';
+                overlay.style.display = 'flex';
+                
+                // 切换按钮状态
+                btnStart.style.display = 'none';
+                btnStop.classList.add('show');
+                
+            } catch (err) {
+                console.error('无法访问摄像头:', err);
+                showToast('无法访问摄像头，请检查权限设置');
+            }
+        }
+        
+        function stopShoulderCamera() {
+            const video = document.getElementById('shoulder-video');
+            const placeholder = document.getElementById('shoulder-placeholder');
+            const overlay = document.getElementById('shoulder-overlay');
+            const btnStart = document.getElementById('btn-start-camera');
+            const btnStop = document.getElementById('btn-stop-camera');
+            
+            // 停止视频流
+            if (shoulderStream) {
+                shoulderStream.getTracks().forEach(track => track.stop());
+                shoulderStream = null;
+            }
+            
+            // 清除视频源
+            video.srcObject = null;
+            
+            // 恢复初始状态
+            placeholder.style.display = 'flex';
+            overlay.style.display = 'none';
+            btnStart.style.display = 'flex';
+            btnStop.classList.remove('show');
+        }        
         // ========== 问卷题目数据 ==========
         const questions = [
             {
@@ -4554,6 +5921,9 @@
                     if (page === 'activity-detail' && params.id) initActivityDetail(params.id);
                     if (page === 'vip') initVip();
                     if (page === 'ai-scalp') initAiScalp();
+                    if (page === 'ai-tongue') initAiTongue();
+                    if (page === 'ai-shoulder') initAiShoulder();
+                    if (page === 'health-advisory') initHealthAdvisory();
                     
                     // 更新底部导航
                     updateBottomNav(page);
@@ -5723,6 +7093,183 @@
                             🎬 开始学习头皮舒缓课程
                         </button>
                     </div>
+                </div>
+            `;
+            
+            // 滚动到结果区域
+            resultContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        
+        // ========== AI舌诊相关 ==========
+        let uploadedTongueImage = null;
+        
+        // 假数据
+        const fakeTongueResult = {
+            features: {
+                tongueColor: '淡红',
+                tongueColorDesc: '舌色淡红，属正常舌色范围',
+                coating: '薄白苔',
+                coatingDesc: '舌苔薄白均匀，为正常舌苔',
+                shape: '齿痕舌',
+                shapeDesc: '舌体边缘有齿痕，提示脾虚湿盛',
+                moisture: '润',
+                moistureDesc: '舌面滋润，津液充足'
+            },
+            constitution: '脾虚湿盛体质',
+            analysis: '根据您的舌象分析，舌色淡红、舌苔薄白、舌体有齿痕，提示脾虚湿盛。建议健脾祛湿，调理脾胃功能。',
+            suggestions: [
+                { type: '饮食', content: '多食健脾祛湿食物：山药、薏米、芡实、白扁豆', icon: '🍲' },
+                { type: '起居', content: '避免久居潮湿环境，保持室内通风干燥', icon: '🏠' },
+                { type: '穴位', content: '按揉足三里、丰隆穴，每日3-5分钟', icon: '💆' },
+                { type: '运动', content: '适度运动出汗，促进湿气排出', icon: '🏃' }
+            ]
+        };
+        
+        // 舌诊页面初始化
+        function initAiTongue() {
+            uploadedTongueImage = null;
+            document.getElementById('tongue-preview-image').classList.remove('show');
+            document.getElementById('tongue-preview-placeholder').classList.remove('hidden');
+            document.getElementById('tongue-preview-image').src = '';
+            document.getElementById('tongue-tip-desc').value = '';
+            document.getElementById('tongue-result').classList.add('hidden');
+            document.getElementById('tongue-detect-btn').disabled = false;
+            document.getElementById('tongue-detect-btn-text').textContent = '🔍 开始AI舌诊';
+            document.getElementById('tongue-detect-btn').classList.remove('loading');
+        }
+        
+        // 处理舌象文件选择
+        function handleTongueFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // 验证文件类型
+            if (!file.type.startsWith('image/')) {
+                showToast('请上传图片文件');
+                return;
+            }
+            
+            // 验证文件大小（限制5MB）
+            if (file.size > 5 * 1024 * 1024) {
+                showToast('图片大小不能超过5MB');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                uploadedTongueImage = e.target.result;
+                document.getElementById('tongue-preview-image').src = uploadedTongueImage;
+                document.getElementById('tongue-preview-image').classList.add('show');
+                document.getElementById('tongue-preview-placeholder').classList.add('hidden');
+                showToast('舌象上传成功');
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        // 开始舌诊检测
+        async function startTongueDetection() {
+            if (!uploadedTongueImage) {
+                showToast('请先上传舌象照片');
+                return;
+            }
+            
+            const btn = document.getElementById('tongue-detect-btn');
+            const btnText = document.getElementById('tongue-detect-btn-text');
+            
+            btn.disabled = true;
+            btn.classList.add('loading');
+            btnText.textContent = 'AI分析中...';
+            
+            try {
+                // 模拟API调用延迟
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                // 使用假数据演示效果
+                console.log('使用假数据进行舌诊演示');
+                console.log('舌象数据:', uploadedTongueImage ? '已上传' : '未上传');
+                console.log('身体描述:', document.getElementById('tongue-tip-desc').value);
+                
+                renderTongueResult(fakeTongueResult);
+            } catch (error) {
+                console.error('检测失败:', error);
+                showToast('检测失败，请重试');
+            } finally {
+                btn.disabled = false;
+                btn.classList.remove('loading');
+                btnText.textContent = '🔍 重新检测';
+            }
+        }
+        
+        // 渲染舌诊结果
+        function renderTongueResult(result) {
+            const resultContainer = document.getElementById('tongue-result');
+            resultContainer.classList.remove('hidden');
+            
+            resultContainer.innerHTML = `
+                <div class="tongue-result" style="margin-top: 16px;">
+                    <div class="tongue-result-header">
+                        <div class="tongue-result-icon">🤖</div>
+                        <div>
+                            <div class="result-title">舌象状态评估报告</div>
+                            <div class="result-subtitle">基于AI舌象分析与症状描述</div>
+                        </div>
+                    </div>
+                    
+                    <div class="tongue-feature-grid">
+                        <div class="tongue-feature-item">
+                            <div class="tongue-feature-label">舌色</div>
+                            <div class="tongue-feature-value">${result.features.tongueColor}</div>
+                            <div class="tongue-feature-desc">${result.features.tongueColorDesc}</div>
+                        </div>
+                        <div class="tongue-feature-item">
+                            <div class="tongue-feature-label">舌苔</div>
+                            <div class="tongue-feature-value">${result.features.coating}</div>
+                            <div class="tongue-feature-desc">${result.features.coatingDesc}</div>
+                        </div>
+                        <div class="tongue-feature-item">
+                            <div class="tongue-feature-label">舌形</div>
+                            <div class="tongue-feature-value">${result.features.shape}</div>
+                            <div class="tongue-feature-desc">${result.features.shapeDesc}</div>
+                        </div>
+                        <div class="tongue-feature-item">
+                            <div class="tongue-feature-label">润燥</div>
+                            <div class="tongue-feature-value">${result.features.moisture}</div>
+                            <div class="tongue-feature-desc">${result.features.moistureDesc}</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tongue-constitution-badge">
+                    <div class="tongue-constitution-main">${result.constitution}</div>
+                    <div class="tongue-constitution-sub">中医体质参考</div>
+                </div>
+                
+                <div class="tongue-result">
+                    <div class="form-label" style="font-weight: 600; margin-bottom: 10px;">辨证分析</div>
+                    <div class="tongue-analysis-text">
+                        ${result.analysis}
+                    </div>
+                </div>
+                
+                <div class="tongue-result">
+                    <div class="form-label" style="font-weight: 600; margin-bottom: 10px;">调理建议</div>
+                    <div class="tongue-suggestions">
+                        ${result.suggestions.map(item => `
+                            <div class="tongue-suggestion-item">
+                                <div class="tongue-suggestion-icon">${item.icon}</div>
+                                <div class="tongue-suggestion-content">
+                                    <div class="tongue-suggestion-type">${item.type}</div>
+                                    <div class="tongue-suggestion-text">${item.content}</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                <div style="padding: 0 16px 16px;">
+                    <button class="btn-primary" onclick="router.navigate('assessment')" style="background: #FF9800;">
+                        📋 进入测评中心
+                    </button>
                 </div>
             `;
             
